@@ -1,0 +1,41 @@
+# Secrets - never commit
+data_grabber/sentinelone-powerquery/config.json
+.env
+.env.*
+!.env.example
+
+# Punycode IDN scenario — org-specific brands, generated impersonation list, DNS exports, local DNS config (tracked: *.example, scripts, .gitkeep)
+scenarios/punycode_encoded_international_domain_names/input/brand_domains.txt
+scenarios/punycode_encoded_international_domain_names/input/brand_domains_impersonation.txt
+scenarios/punycode_encoded_international_domain_names/input/**/*.csv
+scenarios/punycode_encoded_international_domain_names/config/authoritative_dns_nameservers.conf
+
+# C2 beaconing scenario — company-specific exclusions (tracked: *.example)
+scenarios/detection_of_c2_network_beaconing/exclusions/excluded_values-company-specific.conf
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE
+.idea/
+.vscode/
+speclan/.local/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Office documents
+*.docx
+*.pptx
+
+# "Hide Env" config file extension
+.hide
