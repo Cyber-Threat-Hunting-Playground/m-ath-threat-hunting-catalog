@@ -1,0 +1,3 @@
+# One brand hostname per line (FQDN). ASCII is typical; lines starting with # are ignored.
+# Example:
+# example.com
