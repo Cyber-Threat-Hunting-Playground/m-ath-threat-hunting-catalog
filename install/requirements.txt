@@ -1,5 +1,5 @@
 deep-translator>=1.11
-idna>=3.7
+idna>=3.18
 ipykernel>=6.0
 ipython>=8.0
 ipywidgets>=8.1.8
