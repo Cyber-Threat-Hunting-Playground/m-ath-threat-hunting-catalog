@@ -1,5 +1,12 @@
 # Threat Hunting M-ATH Catalog
 
+[![Python 3.12](https://img.shields.io/badge/Python-3.12-3670A0?style=flat&logo=python&logoColor=ffdd54)](https://www.python.org/)
+[![JupyterLab](https://img.shields.io/badge/JupyterLab-4.0+-F37626?style=flat&logo=jupyter&logoColor=white)](https://jupyter.org/)
+[![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF?style=flat&logo=github-actions&logoColor=white)](https://github.com/features/actions)
+[![PowerShell](https://img.shields.io/badge/PowerShell-5391FE?style=flat&logo=powershell&logoColor=white)](https://github.com/PowerShell/PowerShell)
+[![Splunk PEAK Framework](https://img.shields.io/badge/Splunk%20PEAK-Framework-F70000?style=flat&logo=splunk&logoColor=white)](https://www.splunk.com/en_us/blog/security/peak-threat-hunting-framework.html)
+[![VirusTotal Enriched](https://img.shields.io/badge/VirusTotal-Enriched-002F6C?style=flat&logo=virustotal&logoColor=white)](https://www.virustotal.com/)
+
 **Model-Assisted Threat Hunting (M-ATH)** — algorithmically-driven Cyber Threat Hunting topics, aligned with the [Splunk PEAK Threat Hunting Framework](https://www.splunk.com/en_us/blog/security/peak-threat-hunting-framework.html).
 
 This repository manages threat hunting scenarios that use machine learning and statistical methods — such as classification, clustering, anomaly detection, and time-series analysis — to surface leads that simpler methods may miss.
@@ -88,18 +95,53 @@ At commit `62e72c5b475a51addb1a843a6a0bbb0df7da86e9`, the `detection_logics/` pa
 
 > If you add a new detection logic module, ensure it exports an `apply()` function with the same signature and (if applicable) register it in `detection_logics/__init__.py` so it is included in the DNS/URL logic pipelines.
 
+## Data Transformation Utilities
+
+The [data_transform](./data_transform) directory provides command-line tools for sanitizing and preprocessing telemetry:
+
+* **Data Anonymisation Tool** ([data_anonymisation.py](./data_transform/data_anonymisation.py)):
+  - Searches and replaces sensitive information like usernames, domain logins, computer names, and company names.
+  - Features smart auto-discovery of user profile paths (`C:\Users\...`, `/home/...`) and common hostnames (e.g., `DESKTOP-XXXXXXX`).
+  - Customizable using mappings in `data_anonymisation.input`.
+  - Supports `--dry-run`, `--in-place` modification, and custom output suffixes.
+* **Data Deduplication Tool** ([data_deduplication.py](./data_transform/data_deduplication.py)):
+  - Performs case-insensitive deduplication and filters out empty lines.
+  - **Numeric Aggregation Support**: Automatically identifies CSV columns containing "occurrence" or "prevalence" (case-insensitive) and sums their numeric values across duplicate rows, merging them into a single row.
+  - Supports `--stats`, `--dry-run`, `--in-place` modification, and custom output suffixes.
+
+See [data_transform/README.md](./data_transform/README.md) for usage flags and examples.
+
 ## Project Structure
 
 ```
 ├── .devcontainer/                 # Codespaces/devcontainer configuration
-├── .github/workflows/             # GitHub Actions automation
-│   └── virustotal-high-confidence.yml
+├── .github/                       # GitHub Actions & validation helper scripts
+│   ├── scripts/
+│   │   ├── create_data_transform_issues.py
+│   │   ├── create_missing_catalog_issues.py
+│   │   ├── create_missing_scenarios_folder_issues.py
+│   │   ├── find_missing_in_catalog.py
+│   │   └── find_missing_scenarios_folders.py
+│   └── workflows/
+│       ├── check-catalog-sync.yml
+│       ├── check-data-transform.yml
+│       ├── check-scenarios-folders.yml
+│       ├── download-confusables.yml
+│       └── virustotal-high-confidence.yml
 ├── data_grabber/
 │   └── sentinelone-powerquery/
 │       ├── sentinelone_query.py   # SentinelOne PowerQuery collector
 │       └── config.json            # Local query configuration
+├── data_transform/                # Telemetry cleaning and deduplication utilities
+│   ├── data_anonymisation.py
+│   ├── data_anonymisation.input.example
+│   └── data_deduplication.py
 ├── detection_logics/              # Shared scoring and enrichment helpers (reusable rule hits)
 ├── install/
+│   ├── bootstrap_jupyter_venv.ps1 # Central JupyterLab environment bootstrap (Windows)
+│   ├── bootstrap_jupyter_venv.py  # Central JupyterLab environment bootstrap (Python)
+│   ├── bootstrap_scenario_venv.ps1 # Scenario-specific venv bootstrap & kernel registration (Windows)
+│   ├── bootstrap_scenario_venv.sh # Scenario-specific venv bootstrap & kernel registration (Bash)
 │   ├── install_dependencies.ps1   # Local dependency bootstrap
 │   ├── install_dependencies.sh    # Linux/macOS dependency bootstrap
 │   └── requirements.txt           # Shared Python dependencies
@@ -117,71 +159,114 @@ At commit `62e72c5b475a51addb1a843a6a0bbb0df7da86e9`, the `detection_logics/` pa
 │   ├── json_to_csv.py
 │   ├── run_analysis.py
 │   └── update_catalog_folders.py
-└── ...
+├── start_jupyterlab.ps1           # Runner to start central JupyterLab (Windows)
+└── start_jupyterlab.py            # Runner to start central JupyterLab (Python)
 ```
 
 ## Architecture
 
 | Component | Purpose |
 |-----------|---------|
-| **GitHub Actions** | VirusTotal enrichment and automated validation checks (catalog sync, folder checks, data transform compliance) |
-| **GitHub Codespaces** | Interactive development and notebook editing on GitHub servers |
-| **Local execution** | Not supported; use Codespaces for development |
+| **GitHub Actions** | Quality assurance: checks catalog sync, checks scenario folder integrity, tests data transform compliance, updates Unicode confusables, and enrichments |
+| **GitHub Codespaces** | Interactive development and notebook editing on cloud instances |
+| **Local execution** | Fully supported using central JupyterLab runner (`.jupyter_venv`) and scenario-isolated environments (`.venv`) registered as custom Jupyter kernels |
 
-## Setup
+## Setup & Local Development
 
-### Local/Notebook dependency install
+### JupyterLab Development Flow (Recommended)
 
-Install Python dependencies before running notebooks or helper scripts. These installers expect Python 3 to already be available on your `PATH`.
+Local notebooks are executed in scenario-isolated virtual environments to prevent dependency conflicts, and registered as custom kernels for JupyterLab:
 
-```powershell
-./install/install_dependencies.ps1
-```
+1. **Bootstrap Central JupyterLab**:
+   Install the central JupyterLab server environment under `.jupyter_venv`:
+   * **Windows (PowerShell):**
+     ```powershell
+     ./install/bootstrap_jupyter_venv.ps1
+     ```
+   * **Linux/macOS:**
+     ```bash
+     python install/bootstrap_jupyter_venv.py
+     ```
 
-```bash
-./install/install_dependencies.sh
-```
+2. **Bootstrap Scenario Virtual Environment**:
+   Create the scenario's isolated `.venv`, install the shared `detection_logics` package in editable mode (`pip install -e`), and register its custom Jupyter kernel (e.g., `M-ATH: dga_detection`):
+   * **Windows (PowerShell):**
+     ```powershell
+     ./install/bootstrap_scenario_venv.ps1 -ScenarioPath scenarios/dga_detection
+     ```
+   * **Linux/macOS:**
+     ```bash
+     chmod +x ./install/bootstrap_scenario_venv.sh
+     ./install/bootstrap_scenario_venv.sh scenarios/dga_detection
+     ```
 
-Use the PowerShell script on Windows and the shell script on Linux or macOS. Both scripts will automatically bootstrap `pip` (using `ensurepip`) if it is missing, install packages from `install/requirements.txt`, and verify that `requests` is available after installation.
+3. **Start JupyterLab**:
+   Launch JupyterLab in headless mode:
+   * **Windows (PowerShell):**
+     ```powershell
+     ./start_jupyterlab.ps1
+     ```
+   * **Linux/macOS:**
+     ```bash
+     python start_jupyterlab.py
+     ```
+   Copy the server URL and token from the console output, open it in your browser, load the scenario notebook (`.ipynb`), and select the registered `M-ATH: <scenario_name>` kernel from the top-right kernel dropdown.
 
-If needed, make the shell script executable first:
+---
 
-```bash
-chmod +x ./install/install_dependencies.sh
-```
+### Scripts Execution (Alternative Local Setup)
 
-For VirusTotal-enabled scenarios, set `VT_API_KEY` in your environment.
+To execute standalone helper Python scripts outside of JupyterLab:
 
-### GitHub Actions
+* **Windows (PowerShell):**
+  ```powershell
+  ./install/install_dependencies.ps1
+  ```
+* **Linux/macOS:**
+  ```bash
+  chmod +x ./install/install_dependencies.sh
+  ./install/install_dependencies.sh
+  ```
+For VirusTotal-enabled scripts, set `VT_API_KEY` in your environment.
 
-To enable VirusTotal enrichment on high-confidence findings:
-1. Add the `VT_API_KEY` secret in your repository settings (**Settings** → **Secrets and variables** → **Actions**).
-2. The enrichment workflow will run automatically when high-confidence findings are updated or can be triggered manually (**Actions** → **Add VirusTotal verdicts** → **Run workflow**).
+---
 
-### GitHub Codespaces (development)
+### GitHub Actions Integration
 
-1. Open the repo in Codespaces (Code → Codespaces → Create codespace).
-2. For SentinelOne queries, create `data_grabber/sentinelone-powerquery/config.json` from `config.json.example` and add your credentials.
-3. Or set env vars: `SENTINELONE_URL`, `SENTINELONE_TOKEN`, `SENTINELONE_TEAM_EMAILS` (Codespaces secrets).
+1. **VirusTotal Enrichment**:
+   - Add the `VT_API_KEY` secret in repository settings (**Settings** → **Secrets and variables** → **Actions**).
+   - Runs automatically when high-confidence findings are updated, or manually via workflow dispatch.
 
-Each scenario README under `scenarios/*/README.md` now includes its own GitHub Codespaces guidance. Use the scenario-local README for the exact steps for that hunt, including input placement, notebook or script execution, optional secrets such as `VT_API_KEY`, and any scenario-specific dependencies.
+2. **Auto-Validation Checks**:
+   - Automated workflows run daily at 2:00 AM GMT to detect missing scenario entries or folders and verify script compliance.
 
 ### Git Pre-Commit Hooks (Development Security)
 
-To prevent accidental commits of private datasets, virtual environments, or company-related data/mentions, a Git pre-commit hook is provided in the `.githooks/` directory.
-
-To enable the hook in your local clone, configure your Git repository to use the versioned hook directory:
+To prevent accidental commits of private telemetry or configurations, enable the pre-commit hook:
 
 ```bash
 git config core.hooksPath .githooks
 ```
-
-On Linux or macOS, make sure the hook script is executable:
-
+On Linux/macOS, make sure the hook script is executable:
 ```bash
 chmod +x .githooks/pre-commit
 ```
 
-## Workflows
+## GitHub Workflows & Automation
 
-- **Add VirusTotal verdicts** – Lightweight workflow to re-enrich high-confidence findings only.
+The repository contains continuous integration workflows configured in `.github/workflows/`:
+
+* **Check Catalog Sync** ([check-catalog-sync.yml](./.github/workflows/check-catalog-sync.yml)):
+  - Runs daily or manually.
+  - Identifies scenarios directories not in `scenarios/catalog.csv` (using [find_missing_in_catalog.py](./.github/scripts/find_missing_in_catalog.py)) and files GitHub Issues (using [create_missing_catalog_issues.py](./.github/scripts/create_missing_catalog_issues.py)).
+* **Check Scenarios Folders** ([check-scenarios-folders.yml](./.github/workflows/check-scenarios-folders.yml)):
+  - Runs daily or manually.
+  - Verifies that all scenarios in `catalog.csv` have folders containing `input/` and `output/` directories (using [find_missing_scenarios_folders.py](./.github/scripts/find_missing_scenarios_folders.py)) and files GitHub Issues (using [create_missing_scenarios_folder_issues.py](./.github/scripts/create_missing_scenarios_folder_issues.py)).
+* **Check Data Transform Scripts** ([check-data-transform.yml](./.github/workflows/check-data-transform.yml)):
+  - Triggered on PRs/pushes to `data_transform/`.
+  - Quality checks Python scripts (using [create_data_transform_issues.py](./.github/scripts/create_data_transform_issues.py)) for compilation, shebang structure, top-level docstrings, and argparse `--dry-run` support, opening issues for compliance failures.
+* **Download Confusables** ([download-confusables.yml](./.github/workflows/download-confusables.yml)):
+  - Runs automatically on pushes to default branch or manually.
+  - Updates Unicode confusables data under `detection_logics/resources/unicode_TR39_confusables.txt` dynamically.
+* **Add VirusTotal verdicts** ([virustotal-high-confidence.yml](./.github/workflows/virustotal-high-confidence.yml)):
+  - Enriches high-confidence findings automatically with VirusTotal verdicts upon change.
