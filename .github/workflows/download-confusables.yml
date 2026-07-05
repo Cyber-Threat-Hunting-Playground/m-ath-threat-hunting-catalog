@@ -1,0 +1,41 @@
+# Fetch latest Unicode security confusables into detection_logics/resources
+name: Download Confusables
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  download-unicode-tr39-confusables:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.0.2
+
+      - name: Download Unicode TR39 confusables database
+        run: |
+          set -euo pipefail
+          mkdir -p detection_logics/resources
+          curl -fSL --retry 3 --connect-timeout 20 \
+            -o detection_logics/resources/unicode_TR39_confusables.txt \
+            https://www.unicode.org/Public/security/latest/confusables.txt
+          test -s detection_logics/resources/unicode_TR39_confusables.txt
+
+      - name: Commit and push if updated
+        if: |
+          github.ref == format('refs/heads/{0}', github.event.repository.default_branch) ||
+          github.event_name == 'workflow_dispatch'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add detection_logics/resources/unicode_TR39_confusables.txt
+          if git diff --staged --quiet; then
+            echo "No changes to unicode_TR39_confusables.txt"
+          else
+            git commit -m "chore: refresh Unicode TR39 confusables database (unicode_TR39_confusables.txt)"
+            git push
+          fi

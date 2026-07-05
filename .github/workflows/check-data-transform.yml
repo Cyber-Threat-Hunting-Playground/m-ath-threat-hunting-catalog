@@ -1,0 +1,35 @@
+# Workflow to run quality check on data transform scripts
+# Runs when any python file in data_transform/ is created or modified
+name: Check Data Transform Scripts
+
+on:
+  push:
+    paths:
+      - 'data_transform/**/*.py'
+  pull_request:
+    paths:
+      - 'data_transform/**/*.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check-quality:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.0.2
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run quality checks and create issues if non-compliant
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python .github/scripts/create_data_transform_issues.py

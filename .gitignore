@@ -1,20 +1,38 @@
 # Secrets - never commit
-data_grabber/sentinelone-powerquery/config.json
+*.input
+!*.input.example
+!detection_logics/dns_suspicious_string.input
 .env
 .env.*
 !.env.example
 
-# Punycode IDN scenario — org-specific brands, generated impersonation list, DNS exports, local DNS config (tracked: *.example, scripts, .gitkeep)
-scenarios/punycode_encoded_international_domain_names/input/brand_domains.txt
-scenarios/punycode_encoded_international_domain_names/input/brand_domains_impersonation.txt
-scenarios/punycode_encoded_international_domain_names/input/**/*.csv
+# Scenario inputs and outputs
+# Ignore all files in input and output scenario folders, except placeholders, scripts, and example templates
+scenarios/**/input/*
+!scenarios/**/input/.gitkeep
+!scenarios/**/input/*.py
+!scenarios/**/input/*.example
+
+scenarios/**/output/*
+!scenarios/**/output/.gitkeep
+!scenarios/**/output/*.example
+
+# Exclude company-specific configurations/exclusions (tracked: *.example)
+**/*company-specific.conf
+!**/*company-specific.conf.example
+
+# Punycode IDN scenario config
 scenarios/punycode_encoded_international_domain_names/config/authoritative_dns_nameservers.conf
 
-# C2 beaconing scenario — company-specific exclusions (tracked: *.example)
-scenarios/detection_of_c2_network_beaconing/exclusions/excluded_values-company-specific.conf
-
-# Python
+# Python / Virtual Environments
 .venv/
+venv/
+.jupyter_venv/
+*_venv/
+**/venv/
+**/.venv/
+**/_venv/
+**/*_venv/
 __pycache__/
 *.py[cod]
 *.egg-info/

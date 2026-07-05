@@ -1,0 +1,39 @@
+# Check that every scenario in catalog.csv has a folder with input/ and output/ subfolders
+# Runs daily at 2 AM GMT; creates a GitHub Issue for each catalog entry with missing or incomplete folder
+name: Check Scenarios Folders
+
+on:
+  schedule:
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check-folders:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.0.2
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Find catalog entries with missing or incomplete scenario folders
+        id: find-missing
+        run: |
+          python .github/scripts/find_missing_scenarios_folders.py > missing_folders.json
+          echo "missing_count=$(python -c "import json; d=json.load(open('missing_folders.json')); print(len(d.get('missing', [])))")" >> $GITHUB_OUTPUT
+          cat missing_folders.json
+
+      - name: Create GitHub Issues for missing scenario folders
+        if: steps.find-missing.outputs.missing_count != '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python .github/scripts/create_missing_scenarios_folder_issues.py

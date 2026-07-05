@@ -1,0 +1,52 @@
+name: Add VirusTotal verdicts to high-confidence findings
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - scenarios/dns_url_anomaly_analysis/output/*_findings_high_confidence.csv
+      - scripts/add_virustotal_verdicts.py
+      - .github/workflows/virustotal-high-confidence.yml
+
+permissions:
+  contents: write
+
+jobs:
+  enrich-high-confidence:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.0.2
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Add VirusTotal verdicts
+        env:
+          VT_API_KEY: ${{ secrets.VT_API_KEY }}
+        run: |
+          if [ -n "$VT_API_KEY" ]; then
+            python scripts/add_virustotal_verdicts.py --output-dir scenarios/dns_url_anomaly_analysis/output --sleep-seconds 0.25
+          else
+            echo "VT_API_KEY not set - skipping VirusTotal enrichment."
+          fi
+
+      - name: Commit enriched files
+        run: |
+          if [ -n "$(git status --porcelain scenarios/dns_url_anomaly_analysis/output/)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add scenarios/dns_url_anomaly_analysis/output/
+            git commit -m "chore: add VirusTotal verdicts to high-confidence findings"
+            git push
+          else
+            echo "No changes to commit."
+          fi

@@ -1,0 +1,39 @@
+# Check that every scenario folder is listed in scenarios/catalog.csv
+# Runs daily at 2 AM GMT; creates a GitHub Issue for each scenario folder not in the catalog
+name: Check Catalog Sync
+
+on:
+  schedule:
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check-catalog:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.0.2
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Find scenarios missing from catalog
+        id: find-missing
+        run: |
+          python .github/scripts/find_missing_in_catalog.py > missing_scenarios.json
+          echo "missing_count=$(python -c "import json; d=json.load(open('missing_scenarios.json')); print(len(d.get('missing', [])))")" >> $GITHUB_OUTPUT
+          cat missing_scenarios.json
+
+      - name: Create GitHub Issues for missing scenarios
+        if: steps.find-missing.outputs.missing_count != '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python .github/scripts/create_missing_catalog_issues.py

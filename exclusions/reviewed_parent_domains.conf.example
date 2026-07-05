@@ -1,0 +1,14 @@
+# Parent domains reviewed and confirmed as genuine findings — NOT false positives
+# One parent domain per line
+# Lines starting with # are comments
+#
+# Domains listed here will be excluded from punycode_idn_false_positive_parent_domains_candidates.csv
+# so they are not re-proposed for exclusion on subsequent runs.
+#
+# Workflow:
+#   1. Run the notebook → review output/punycode_idn_false_positive_parent_domains_candidates.csv
+#   2. For parent domains you want to EXCLUDE (true false positives): add them to excluded_parent_domains.conf
+#   3. For parent domains you want to KEEP in findings (not false positives): add them here
+#
+# Example:
+# suspicious-but-real-threat.com
