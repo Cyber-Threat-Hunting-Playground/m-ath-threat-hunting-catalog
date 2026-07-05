@@ -97,19 +97,19 @@ At commit `62e72c5b475a51addb1a843a6a0bbb0df7da86e9`, the `detection_logics/` pa
 
 ## Data Transformation Utilities
 
-The [data_transform](file:///c:/Users/jmarc/OneDrive/Documents/Projets/Threat%20Hunting/threat_hunting_m-ath_catalog/data_transform) directory provides command-line tools for sanitizing and preprocessing telemetry:
+The [data_transform](./data_transform) directory provides command-line tools for sanitizing and preprocessing telemetry:
 
-* **Data Anonymisation Tool** ([data_anonymisation.py](file:///c:/Users/jmarc/OneDrive/Documents/Projets/Threat%20Hunting/threat_hunting_m-ath_catalog/data_transform/data_anonymisation.py)):
+* **Data Anonymisation Tool** ([data_anonymisation.py](./data_transform/data_anonymisation.py)):
   - Searches and replaces sensitive information like usernames, domain logins, computer names, and company names.
   - Features smart auto-discovery of user profile paths (`C:\Users\...`, `/home/...`) and common hostnames (e.g., `DESKTOP-XXXXXXX`).
   - Customizable using mappings in `data_anonymisation.input`.
   - Supports `--dry-run`, `--in-place` modification, and custom output suffixes.
-* **Data Deduplication Tool** ([data_deduplication.py](file:///c:/Users/jmarc/OneDrive/Documents/Projets/Threat%20Hunting/threat_hunting_m-ath_catalog/data_transform/data_deduplication.py)):
+* **Data Deduplication Tool** ([data_deduplication.py](./data_transform/data_deduplication.py)):
   - Performs case-insensitive deduplication and filters out empty lines.
   - **Numeric Aggregation Support**: Automatically identifies CSV columns containing "occurrence" or "prevalence" (case-insensitive) and sums their numeric values across duplicate rows, merging them into a single row.
   - Supports `--stats`, `--dry-run`, `--in-place` modification, and custom output suffixes.
 
-See [data_transform/README.md](file:///c:/Users/jmarc/OneDrive/Documents/Projets/Threat%20Hunting/threat_hunting_m-ath_catalog/data_transform/README.md) for usage flags and examples.
+See [data_transform/README.md](./data_transform/README.md) for usage flags and examples.
 
 ## Project Structure
 
@@ -256,17 +256,17 @@ chmod +x .githooks/pre-commit
 
 The repository contains continuous integration workflows configured in `.github/workflows/`:
 
-* **Check Catalog Sync** ([check-catalog-sync.yml](file:///c:/Users/jmarc/OneDrive/Documents/Projets/Threat%20Hunting/threat_hunting_m-ath_catalog/.github/workflows/check-catalog-sync.yml)):
+* **Check Catalog Sync** ([check-catalog-sync.yml](./.github/workflows/check-catalog-sync.yml)):
   - Runs daily or manually.
-  - Identifies scenarios directories not in `scenarios/catalog.csv` (using [find_missing_in_catalog.py](file:///c:/Users/jmarc/OneDrive/Documents/Projets/Threat%20Hunting/threat_hunting_m-ath_catalog/.github/scripts/find_missing_in_catalog.py)) and files GitHub Issues (using [create_missing_catalog_issues.py](file:///c:/Users/jmarc/OneDrive/Documents/Projets/Threat%20Hunting/threat_hunting_m-ath_catalog/.github/scripts/create_missing_catalog_issues.py)).
-* **Check Scenarios Folders** ([check-scenarios-folders.yml](file:///c:/Users/jmarc/OneDrive/Documents/Projets/Threat%20Hunting/threat_hunting_m-ath_catalog/.github/workflows/check-scenarios-folders.yml)):
+  - Identifies scenarios directories not in `scenarios/catalog.csv` (using [find_missing_in_catalog.py](./.github/scripts/find_missing_in_catalog.py)) and files GitHub Issues (using [create_missing_catalog_issues.py](./.github/scripts/create_missing_catalog_issues.py)).
+* **Check Scenarios Folders** ([check-scenarios-folders.yml](./.github/workflows/check-scenarios-folders.yml)):
   - Runs daily or manually.
-  - Verifies that all scenarios in `catalog.csv` have folders containing `input/` and `output/` directories (using [find_missing_scenarios_folders.py](file:///c:/Users/jmarc/OneDrive/Documents/Projets/Threat%20Hunting/threat_hunting_m-ath_catalog/.github/scripts/find_missing_scenarios_folders.py)) and files GitHub Issues (using [create_missing_scenarios_folder_issues.py](file:///c:/Users/jmarc/OneDrive/Documents/Projets/Threat%20Hunting/threat_hunting_m-ath_catalog/.github/scripts/create_missing_scenarios_folder_issues.py)).
-* **Check Data Transform Scripts** ([check-data-transform.yml](file:///c:/Users/jmarc/OneDrive/Documents/Projets/Threat%20Hunting/threat_hunting_m-ath_catalog/.github/workflows/check-data-transform.yml)):
+  - Verifies that all scenarios in `catalog.csv` have folders containing `input/` and `output/` directories (using [find_missing_scenarios_folders.py](./.github/scripts/find_missing_scenarios_folders.py)) and files GitHub Issues (using [create_missing_scenarios_folder_issues.py](./.github/scripts/create_missing_scenarios_folder_issues.py)).
+* **Check Data Transform Scripts** ([check-data-transform.yml](./.github/workflows/check-data-transform.yml)):
   - Triggered on PRs/pushes to `data_transform/`.
-  - Quality checks Python scripts (using [create_data_transform_issues.py](file:///c:/Users/jmarc/OneDrive/Documents/Projets/Threat%20Hunting/threat_hunting_m-ath_catalog/.github/scripts/create_data_transform_issues.py)) for compilation, shebang structure, top-level docstrings, and argparse `--dry-run` support, opening issues for compliance failures.
-* **Download Confusables** ([download-confusables.yml](file:///c:/Users/jmarc/OneDrive/Documents/Projets/Threat%20Hunting/threat_hunting_m-ath_catalog/.github/workflows/download-confusables.yml)):
+  - Quality checks Python scripts (using [create_data_transform_issues.py](./.github/scripts/create_data_transform_issues.py)) for compilation, shebang structure, top-level docstrings, and argparse `--dry-run` support, opening issues for compliance failures.
+* **Download Confusables** ([download-confusables.yml](./.github/workflows/download-confusables.yml)):
   - Runs automatically on pushes to default branch or manually.
   - Updates Unicode confusables data under `detection_logics/resources/unicode_TR39_confusables.txt` dynamically.
-* **Add VirusTotal verdicts** ([virustotal-high-confidence.yml](file:///c:/Users/jmarc/OneDrive/Documents/Projets/Threat%20Hunting/threat_hunting_m-ath_catalog/.github/workflows/virustotal-high-confidence.yml)):
+* **Add VirusTotal verdicts** ([virustotal-high-confidence.yml](./.github/workflows/virustotal-high-confidence.yml)):
   - Enriches high-confidence findings automatically with VirusTotal verdicts upon change.
