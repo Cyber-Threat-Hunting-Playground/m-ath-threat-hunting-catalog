@@ -182,7 +182,7 @@ Local notebooks are executed in scenario-isolated virtual environments to preven
    Install the central JupyterLab server environment under `.jupyter_venv`:
    * **Windows (PowerShell):**
      ```powershell
-     ./install/bootstrap_jupyter_venv.ps1
+     .\install\bootstrap_jupyter_venv.ps1
      ```
    * **Linux/macOS:**
      ```bash
@@ -193,7 +193,7 @@ Local notebooks are executed in scenario-isolated virtual environments to preven
    Create the scenario's isolated `.venv`, install the shared `detection_logics` package in editable mode (`pip install -e`), and register its custom Jupyter kernel (e.g., `M-ATH: dga_detection`):
    * **Windows (PowerShell):**
      ```powershell
-     ./install/bootstrap_scenario_venv.ps1 -ScenarioPath scenarios/dga_detection
+     .\install\bootstrap_scenario_venv.ps1 -ScenarioPath scenarios\dga_detection
      ```
    * **Linux/macOS:**
      ```bash
@@ -205,7 +205,7 @@ Local notebooks are executed in scenario-isolated virtual environments to preven
    Launch JupyterLab in headless mode:
    * **Windows (PowerShell):**
      ```powershell
-     ./scripts/start_jupyterlab.ps1
+     .\scripts\start_jupyterlab.ps1
      ```
    * **Linux/macOS:**
      ```bash
@@ -221,7 +221,7 @@ To execute standalone helper Python scripts outside of JupyterLab:
 
 * **Windows (PowerShell):**
   ```powershell
-  ./install/install_dependencies.ps1
+  .\install\install_dependencies.ps1
   ```
 * **Linux/macOS:**
   ```bash
