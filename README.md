@@ -1,11 +1,11 @@
 # Threat Hunting M-ATH Catalog
 
-[![Python 3.12](https://img.shields.io/badge/Python-3.12-3670A0?style=flat&logo=python&logoColor=ffdd54)](https://www.python.org/)
-[![JupyterLab](https://img.shields.io/badge/JupyterLab-4.0+-F37626?style=flat&logo=jupyter&logoColor=white)](https://jupyter.org/)
-[![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF?style=flat&logo=github-actions&logoColor=white)](https://github.com/features/actions)
-[![PowerShell](https://img.shields.io/badge/PowerShell-5391FE?style=flat&logo=powershell&logoColor=white)](https://github.com/PowerShell/PowerShell)
 [![Splunk PEAK Framework](https://img.shields.io/badge/Splunk%20PEAK-Framework-F70000?style=flat&logo=splunk&logoColor=white)](https://www.splunk.com/en_us/blog/security/peak-threat-hunting-framework.html)
 [![VirusTotal Enriched](https://img.shields.io/badge/VirusTotal-Enriched-002F6C?style=flat&logo=virustotal&logoColor=white)](https://www.virustotal.com/)
+[![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF?style=flat&logo=github-actions&logoColor=white)](https://github.com/features/actions)
+[![PowerShell](https://img.shields.io/badge/PowerShell-5391FE?style=flat&logo=powershell&logoColor=white)](https://github.com/PowerShell/PowerShell)
+[![Python 3.12](https://img.shields.io/badge/Python-3.12-3670A0?style=flat&logo=python&logoColor=ffdd54)](https://www.python.org/)
+[![JupyterLab](https://img.shields.io/badge/JupyterLab-4.0+-F37626?style=flat&logo=jupyter&logoColor=white)](https://jupyter.org/)
 
 **Model-Assisted Threat Hunting (M-ATH)** — algorithmically-driven Cyber Threat Hunting topics, aligned with the [Splunk PEAK Threat Hunting Framework](https://www.splunk.com/en_us/blog/security/peak-threat-hunting-framework.html).
 
