@@ -1,6 +1,6 @@
 $ErrorActionPreference = "Stop"
 
-$ProjectRoot = $PSScriptRoot
+$ProjectRoot = Join-Path $PSScriptRoot ".."
 $VenvPath = Join-Path $ProjectRoot ".jupyter_venv"
 
 if (-not (Test-Path $VenvPath)) {

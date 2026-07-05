@@ -159,8 +159,9 @@ See [data_transform/README.md](./data_transform/README.md) for usage flags and e
 │   ├── json_to_csv.py
 │   ├── run_analysis.py
 │   └── update_catalog_folders.py
-├── start_jupyterlab.ps1           # Runner to start central JupyterLab (Windows)
-└── start_jupyterlab.py            # Runner to start central JupyterLab (Python)
+└── scripts/                       # Utility and runner scripts
+    ├── start_jupyterlab.ps1       # Runner to start central JupyterLab (Windows)
+    └── start_jupyterlab.py        # Runner to start central JupyterLab (Python)
 ```
 
 ## Architecture
@@ -204,11 +205,11 @@ Local notebooks are executed in scenario-isolated virtual environments to preven
    Launch JupyterLab in headless mode:
    * **Windows (PowerShell):**
      ```powershell
-     ./start_jupyterlab.ps1
+     ./scripts/start_jupyterlab.ps1
      ```
    * **Linux/macOS:**
      ```bash
-     python start_jupyterlab.py
+     python scripts/start_jupyterlab.py
      ```
    Copy the server URL and token from the console output, open it in your browser, load the scenario notebook (`.ipynb`), and select the registered `M-ATH: <scenario_name>` kernel from the top-right kernel dropdown.
 

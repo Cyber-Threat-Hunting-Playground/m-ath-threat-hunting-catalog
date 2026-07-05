@@ -5,7 +5,7 @@ import subprocess
 from pathlib import Path
 
 def main():
-    project_root = Path(__file__).resolve().parent
+    project_root = Path(__file__).resolve().parent.parent
     venv_path = project_root / ".jupyter_venv"
 
     if not venv_path.exists():

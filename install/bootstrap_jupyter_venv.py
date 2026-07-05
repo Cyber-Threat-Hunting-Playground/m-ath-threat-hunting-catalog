@@ -46,7 +46,7 @@ def main():
         sys.exit(1)
 
     print("JupyterLab virtual environment bootstrap completed successfully.")
-    print("You can now run start_jupyterlab.ps1 or start_jupyterlab.py from the project root.")
+    print("You can now run scripts/start_jupyterlab.ps1 or scripts/start_jupyterlab.py from the project root.")
 
 if __name__ == "__main__":
     main()

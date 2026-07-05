@@ -50,4 +50,4 @@ if (Test-Path $JupyterRequirements) {
 }
 
 Write-Host "JupyterLab virtual environment bootstrap completed successfully."
-Write-Host "You can now run start_jupyterlab.ps1 or start_jupyterlab.py from the project root."
+Write-Host "You can now run scripts/start_jupyterlab.ps1 or scripts/start_jupyterlab.py from the project root."
