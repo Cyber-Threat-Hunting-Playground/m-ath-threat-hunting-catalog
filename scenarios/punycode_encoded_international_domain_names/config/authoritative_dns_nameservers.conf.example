@@ -1,0 +1,13 @@
+# Managed authoritative DNS nameservers — example file.
+# Copy this file to authoritative_dns_nameservers.conf and replace with your
+# organisation's authoritative DNS NS hostnames.
+# authoritative_dns_nameservers.conf is listed in .gitignore to avoid leaking
+# sensitive internal infrastructure identifiers.
+#
+# One nameserver per line. Lines starting with # are comments.
+
+# --- Example (Company) ---
+# ns1.company.tld
+# ns2.company.tld
+# ns3.company.tld
+# ns4.company.tld

@@ -1,0 +1,6 @@
+# One parent domain per line — any domain ending with this suffix is excluded
+# Lines starting with # are comments
+# Example:
+# example-corp.com   (excludes foo.example-corp.com, bar.baz.example-corp.com, etc.)
+apple.com
+cluster.local

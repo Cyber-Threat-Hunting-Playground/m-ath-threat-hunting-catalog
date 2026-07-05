@@ -1,0 +1,71 @@
+{
+  "score_threshold": 2,
+  "engines": {
+    "dns_heuristics": {
+      "enabled": true,
+      "weight": 1.0
+    },
+    "idn_security_tr39": {
+      "enabled": true,
+      "weight": 1.0
+    },
+    "dns_sibling_compare": {
+      "enabled": true,
+      "score_match": -2,
+      "score_range_match": -1,
+      "score_mismatch": 2,
+      "ipv4_prefix": 24,
+      "ipv6_prefix": 48,
+      "display_weight": "-2 / -1 / +2"
+    },
+    "managed_authoritative_ns": {
+      "enabled": true,
+      "weight": -5
+    },
+    "dns_logic_registry": {
+      "enabled": true,
+      "weight": 1.0
+    },
+    "low_prevalence": {
+      "enabled": true,
+      "threshold": 2,
+      "weight": 1
+    },
+    "vt_tags": {
+      "enabled": true,
+      "weight_per_tag": 1
+    },
+    "suspicious_registrar": {
+      "enabled": true,
+      "weight": 2
+    },
+    "newly_registered": {
+      "enabled": true,
+      "new_threshold_days": 30,
+      "recent_threshold_days": 90,
+      "new_weight": 2,
+      "recent_weight": 1,
+      "display_weight": "+2 (<=30d) / +1 (<=90d)"
+    },
+    "otx_verdict": {
+      "enabled": true,
+      "malicious_weight": 2,
+      "suspicious_weight": 1,
+      "display_weight": "+2 (malicious) / +1 (suspicious)"
+    },
+    "pulsedive_verdict": {
+      "enabled": true,
+      "malicious_weight": 2,
+      "suspicious_weight": 1,
+      "display_weight": "+2 (malicious) / +1 (suspicious)"
+    },
+    "brand_impersonation": {
+      "enabled": true,
+      "weight": 3
+    },
+    "translation": {
+      "enabled": true,
+      "display_weight": "N/A"
+    }
+  }
+}

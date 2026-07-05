@@ -1,0 +1,20 @@
+# Company-specific exclusion values — example file.
+# Copy this file to excluded_values-company-specific.conf and replace the entries with domains
+# specific to your organisation (corporate domains, subsidiaries, internal network suffixes).
+# excluded_values-company-specific.conf is listed in .gitignore to avoid leaking org-specific data.
+#
+# One value per line to exclude completely (destination IP or hostname, lowercased when matched).
+# Lines starting with # are comments.
+
+# --- Corporate domains ---
+# Replace with your organisation's corporate domain(s).
+# example: corp.example.com
+
+# --- Subsidiary domains ---
+# Replace with domain names belonging to your organisation's subsidiaries.
+# example: subsidiary.example.com
+
+# --- Internal network suffixes ---
+# Replace with internal DNS suffixes used in your environment (non-routable / split-horizon DNS).
+# example: internal.example
+# example: corp.local

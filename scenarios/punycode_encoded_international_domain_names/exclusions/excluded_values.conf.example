@@ -1,0 +1,7 @@
+# One value per line to exclude completely
+# Lines starting with # are comments
+# Example:
+# xn--example-domain-123.com
+xn--iphignie-f1a.com # https://www.iphigen.ie/
+xn--socit-esab.com # https://www.societe.com/
+franais # français without the cedilla
