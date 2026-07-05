@@ -1,4 +1,4 @@
-deep-translator>=1.11
+deep-translator>=1.11.4
 idna>=3.7
 ipykernel>=6.0
 ipython>=8.0
