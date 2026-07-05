@@ -1,2 +1,0 @@
-# Scenario-specific dependencies
-# Add packages required ONLY for this scenario here.
