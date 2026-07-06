@@ -13,3 +13,4 @@ requests>=2.34.2  # required for VirusTotal API integrations
 seaborn>=0.13
 tabulate
 wordcloud>=1.9.6
+pytest>=8.0.0

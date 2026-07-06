@@ -30,6 +30,28 @@ M-ATH is one of three hunt types in the PEAK Framework (*Prepare, Execute, and A
 > - [Model-Assisted Threat Hunting (M-ATH) with the PEAK Framework](https://www.splunk.com/en_us/blog/security/peak-framework-math-model-assisted-threat-hunting.html)
 > - [The Threat Hunter's Cookbook - A practitioner’s guide to threat hunting by SURGe’s security experts](https://www.splunk.com/en_us/campaigns/threat-hunters-cookbook.html) 
 
+```mermaid
+graph TD
+    subgraph Prepare ["1. Prepare"]
+        A[Telemetry Sources] -->|Ingest| B[Data Transform / Sanitization]
+        B -->|Deduplicated & Anonymized| C[Scenario Input Directory]
+    end
+    subgraph Execute ["2. Execute (M-ATH)"]
+        C --> D[Scenario Jupyter Notebook / Script]
+        D -->|Feature Extraction| E[Models & Statistical Methods]
+        E -->|Classification / Clustering / Anomaly Detection| F[Candidate Leads]
+        F -->|Shared Detection Logics Scoring| G[Scored & Enriched Leads]
+    end
+    subgraph Act ["3. Act with Knowledge"]
+        G --> H[High-Confidence Findings]
+        H -->|Analyst Triage & Investigation| I[Incident Response / Remediation]
+    end
+
+    style Prepare fill:#f9f9f9,stroke:#333,stroke-width:1px
+    style Execute fill:#f5f8ff,stroke:#33ff,stroke-width:1.5px
+    style Act fill:#fff5f5,stroke:#ff3333,stroke-width:1px
+```
+
 ## Scenarios (M-ATH Topics)
 
 Scenarios are organized in `scenarios/` with a catalog in `scenarios/catalog.csv`. Examples include:
@@ -71,6 +93,27 @@ Each logic implements a simple contract:
 **Outputs**
 - `score_delta`: how much to increase the candidate’s score
 - `reasons`: a list of reason names corresponding to rules that hit (for auditability and analyst triage)
+
+```mermaid
+flowchart TD
+    RawTelemetry[Raw Telemetry Input] --> Parser{Telemetry Context?}
+    
+    Parser -->|DNS Value| DNSLogics[apply_dns_logics]
+    Parser -->|URL Value| URILogics[apply_url_logics]
+    
+    subgraph Logics [Shared Detection Logics]
+        DNSLogics --> DNS_Suspicious[dns_suspicious_string.py]
+        URILogics --> DNS_Suspicious
+        
+        DNSLogics --> VT_Verdict[vt_verdict_not_clean.py]
+        URILogics --> VT_Verdict
+    end
+    
+    DNS_Suspicious -->|Score Delta + Reason Tag| Aggregator[Risk Score Aggregator]
+    VT_Verdict -->|Score Delta + Reason Tag| Aggregator
+    
+    Aggregator --> Output[Enriched Lead with Risk Score & Reason Tags]
+```
 
 ### Current detection logic modules
 
@@ -175,6 +218,33 @@ See [data_transform/README.md](./data_transform/README.md) for usage flags and e
 ## Setup & Local Development
 
 ### JupyterLab Development Flow (Recommended)
+
+```mermaid
+graph TD
+    subgraph IDE_Host ["JupyterLab Server"]
+        JL[JupyterLab Run Environment]
+    end
+
+    subgraph Central_Env ["Central Environment"]
+        V1[".jupyter_venv (JupyterLab Server dependencies)"]
+    end
+
+    subgraph Scenario_Envs ["Scenario Isolated Environments"]
+        V2["scenarios/dga_detection/.venv (M-ATH Kernel)"]
+        V3["scenarios/process_clustering/.venv (M-ATH Kernel)"]
+    end
+
+    subgraph Reusable_Code ["Shared Packages"]
+        DL["detection_logics (Installed in editable mode)"]
+    end
+
+    JL -->|Launches with| V1
+    JL -->|Interacts via kernel selection| V2
+    JL -->|Interacts via kernel selection| V3
+    
+    V2 -.->|Depends on| DL
+    V3 -.->|Depends on| DL
+```
 
 Local notebooks are executed in scenario-isolated virtual environments to prevent dependency conflicts, and registered as custom kernels for JupyterLab:
 
