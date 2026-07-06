@@ -3,7 +3,7 @@ import os
 import csv
 import time
 from pathlib import Path
-from kpi_tracker import KPITracker
+from scripts.kpi_tracker import KPITracker
 
 def test_kpi_tracker_basic_timing():
     tracker = KPITracker(scenario_name="test_scenario")

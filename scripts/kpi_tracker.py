@@ -44,9 +44,8 @@ class KPITracker:
 
         # Determine path for the registry
         if not registry_path:
-            # Default to scenarios/kpis.csv in workspace root (one directory up from scenarios/)
-            # But let's find the repo root dynamically.
-            current_file_dir = Path(__file__).resolve().parent
+            # Default to scenarios/kpis.csv in workspace root (one directory up from scripts/)
+            current_file_dir = Path(__file__).resolve().parent.parent
             registry_path = current_file_dir / "scenarios" / "kpis.csv"
         else:
             registry_path = Path(registry_path)

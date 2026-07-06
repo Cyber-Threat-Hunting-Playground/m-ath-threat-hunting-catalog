@@ -1,11 +1,13 @@
 # Threat Hunting M-ATH Catalog
 
-[![Splunk PEAK Framework](https://img.shields.io/badge/Splunk%20PEAK-Framework-F70000?style=flat&logo=splunk&logoColor=white)](https://www.splunk.com/en_us/blog/security/peak-threat-hunting-framework.html)
-[![VirusTotal Enriched](https://img.shields.io/badge/VirusTotal-Enriched-002F6C?style=flat&logo=virustotal&logoColor=white)](https://www.virustotal.com/)
-[![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF?style=flat&logo=github-actions&logoColor=white)](https://github.com/features/actions)
-[![PowerShell](https://img.shields.io/badge/PowerShell-5391FE?style=flat&logo=powershell&logoColor=white)](https://github.com/PowerShell/PowerShell)
-[![Python 3.12](https://img.shields.io/badge/Python-3.12-3670A0?style=flat&logo=python&logoColor=ffdd54)](https://www.python.org/)
-[![JupyterLab](https://img.shields.io/badge/JupyterLab-4.0+-F37626?style=flat&logo=jupyter&logoColor=white)](https://jupyter.org/)
+<p align="left">
+  <a href="https://www.splunk.com/en_us/blog/security/peak-threat-hunting-framework.html"><img src="https://img.shields.io/badge/Splunk%20PEAK-Framework-F70000?style=for-the-badge&logo=splunk&logoColor=white" alt="Splunk PEAK Framework"></a>
+  <a href="https://www.virustotal.com/"><img src="https://img.shields.io/badge/VirusTotal-Enriched-002F6C?style=for-the-badge&logo=virustotal&logoColor=white" alt="VirusTotal Enriched"></a>
+  <a href="https://github.com/features/actions"><img src="https://img.shields.io/badge/GitHub%20Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white" alt="GitHub Actions"></a>
+  <a href="https://github.com/PowerShell/PowerShell"><img src="https://img.shields.io/badge/PowerShell-5391FE?style=for-the-badge&logo=powershell&logoColor=white" alt="PowerShell"></a>
+  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.12-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54" alt="Python 3.12"></a>
+  <a href="https://jupyter.org/"><img src="https://img.shields.io/badge/JupyterLab-4.0+-F37626?style=for-the-badge&logo=jupyter&logoColor=white" alt="JupyterLab"></a>
+</p>
 
 **Model-Assisted Threat Hunting (M-ATH)** — algorithmically-driven Cyber Threat Hunting topics, aligned with the [Splunk PEAK Threat Hunting Framework](https://www.splunk.com/en_us/blog/security/peak-threat-hunting-framework.html).
 
@@ -20,36 +22,48 @@ M-ATH is one of three hunt types in the PEAK Framework (*Prepare, Execute, and A
 - **Data is high-volume or hard to summarize** — suited to dimensionality reduction and clustering
 - **Identification is confident but classification is difficult** — analyst-in-the-loop for final decisions
 
-> **Note:** Scenarios described in `scenarios/catalog.csv` must use one of the PEAK M-ATH sub-processes listed below (described in `PEAK/Splunk PEAK Threat Hunters Cookbook.pdf`):
+> [!NOTE]
+> Scenarios described in `scenarios/catalog.csv` must use one of the PEAK M-ATH sub-processes listed below (described in `PEAK/Splunk PEAK Threat Hunters Cookbook.pdf`):
 > - **Forecasting and Anomaly Detection** (p. 11)
 > - **Clustering** (p. 14)
 > - **Model-Assisted Methods** (p. 30 and 40)
 
-> 📖 **References**
+> [!TIP]
+> **📖 Reference Materials & Guides**
 > - [Introducing the PEAK Threat Hunting Framework](https://www.splunk.com/en_us/blog/security/peak-threat-hunting-framework.html)
 > - [Model-Assisted Threat Hunting (M-ATH) with the PEAK Framework](https://www.splunk.com/en_us/blog/security/peak-framework-math-model-assisted-threat-hunting.html)
 > - [The Threat Hunter's Cookbook - A practitioner’s guide to threat hunting by SURGe’s security experts](https://www.splunk.com/en_us/campaigns/threat-hunters-cookbook.html) 
 
 ```mermaid
 graph TD
-    subgraph Prepare ["1. Prepare"]
-        A[Telemetry Sources] -->|Ingest| B[Data Transform / Sanitization]
+    %% Custom Styling Definitions
+    classDef prepareStyle fill:#E0F7FA,stroke:#00838F,stroke-width:2px,color:#004D40;
+    classDef executeStyle fill:#E8EAF6,stroke:#283593,stroke-width:2px,color:#1A237E;
+    classDef actStyle fill:#FBE9E7,stroke:#D84315,stroke-width:2px,color:#5D4037;
+    classDef nodeStyle fill:#FFFFFF,stroke:#37474F,stroke-width:1px,color:#263238;
+
+    subgraph Phase1 ["1. Prepare Phase"]
+        A[(Telemetry Sources)] -->|Ingest| B[Data Transform & Sanitization]
         B -->|Deduplicated & Anonymized| C[Scenario Input Directory]
     end
-    subgraph Execute ["2. Execute (M-ATH)"]
+    
+    subgraph Phase2 ["2. Execute Phase (M-ATH)"]
         C --> D[Scenario Jupyter Notebook / Script]
         D -->|Feature Extraction| E[Models & Statistical Methods]
-        E -->|Classification / Clustering / Anomaly Detection| F[Candidate Leads]
-        F -->|Shared Detection Logics Scoring| G[Scored & Enriched Leads]
+        E -->|Classification / Clustering / Anomaly| F[Candidate Leads]
+        F -->|Shared Detection Logic Scoring| G[Scored & Enriched Leads]
     end
-    subgraph Act ["3. Act with Knowledge"]
-        G --> H[High-Confidence Findings]
-        H -->|Analyst Triage & Investigation| I[Incident Response / Remediation]
+    
+    subgraph Phase3 ["3. Act Phase"]
+        G --> H{High-Confidence Findings}
+        H -->|Analyst Triage & Investigation| I[Incident Response & Remediation]
     end
 
-    style Prepare fill:#f9f9f9,stroke:#333,stroke-width:1px
-    style Execute fill:#f5f8ff,stroke:#33ff,stroke-width:1.5px
-    style Act fill:#fff5f5,stroke:#ff3333,stroke-width:1px
+    %% Apply Classes
+    class Phase1 prepareStyle;
+    class Phase2 executeStyle;
+    class Phase3 actStyle;
+    class A,B,C,D,E,F,G,H,I nodeStyle;
 ```
 
 ## Scenarios (M-ATH Topics)
@@ -96,23 +110,29 @@ Each logic implements a simple contract:
 
 ```mermaid
 flowchart TD
-    RawTelemetry[Raw Telemetry Input] --> Parser{Telemetry Context?}
+    classDef inputStyle fill:#ECEFF1,stroke:#455A64,stroke-width:1.5px;
+    classDef routerStyle fill:#E8EAF6,stroke:#3F51B5,stroke-width:1.5px;
+    classDef logicStyle fill:#E8F5E9,stroke:#2E7D32,stroke-width:1.5px;
+    classDef aggStyle fill:#FFF8E1,stroke:#F57F17,stroke-width:2px;
+    classDef outStyle fill:#FFEBEE,stroke:#C62828,stroke-width:2px;
+
+    Raw[Raw Telemetry Input]:::inputStyle --> Router{Telemetry Context?}:::routerStyle
     
-    Parser -->|DNS Value| DNSLogics[apply_dns_logics]
-    Parser -->|URL Value| URILogics[apply_url_logics]
+    Router -->|DNS Value| DNS[apply_dns_logics]:::routerStyle
+    Router -->|URL Value| URL[apply_url_logics]:::routerStyle
     
-    subgraph Logics [Shared Detection Logics]
-        DNSLogics --> DNS_Suspicious[dns_suspicious_string.py]
-        URILogics --> DNS_Suspicious
+    subgraph Logics [Modular Detection Rules]
+        DNS --> DNS_Susp[dns_suspicious_string.py]:::logicStyle
+        URL --> DNS_Susp
         
-        DNSLogics --> VT_Verdict[vt_verdict_not_clean.py]
-        URILogics --> VT_Verdict
+        DNS --> VT_Verd[vt_verdict_not_clean.py]:::logicStyle
+        URL --> VT_Verd
     end
     
-    DNS_Suspicious -->|Score Delta + Reason Tag| Aggregator[Risk Score Aggregator]
-    VT_Verdict -->|Score Delta + Reason Tag| Aggregator
+    DNS_Susp -->|Score Delta & Tag| Agg[Risk Score Aggregator]:::aggStyle
+    VT_Verd -->|Score Delta & Tag| Agg
     
-    Aggregator --> Output[Enriched Lead with Risk Score & Reason Tags]
+    Agg --> Output[Enriched Lead with Risk Score & Reason Tags]:::outStyle
 ```
 
 ### Current detection logic modules
@@ -221,21 +241,26 @@ See [data_transform/README.md](./data_transform/README.md) for usage flags and e
 
 ```mermaid
 graph TD
-    subgraph IDE_Host ["JupyterLab Server"]
+    classDef hostStyle fill:#ECEFF1,stroke:#37474F,stroke-dasharray: 5 5;
+    classDef venvStyle fill:#E1F5FE,stroke:#0288D1,stroke-width:2px;
+    classDef kernelStyle fill:#E8F5E9,stroke:#2E7D32,stroke-width:2px;
+    classDef libStyle fill:#FFF3E0,stroke:#F57C00,stroke-width:2px;
+
+    subgraph Host ["JupyterLab Server Host"]
         JL[JupyterLab Run Environment]
     end
 
-    subgraph Central_Env ["Central Environment"]
-        V1[".jupyter_venv (JupyterLab Server dependencies)"]
+    subgraph Central ["Central Environment"]
+        V1[".jupyter_venv<br>(Server Dependencies)"]:::venvStyle
     end
 
-    subgraph Scenario_Envs ["Scenario Isolated Environments"]
-        V2["scenarios/dga_detection/.venv (M-ATH Kernel)"]
-        V3["scenarios/process_clustering/.venv (M-ATH Kernel)"]
+    subgraph Kernels ["Scenario Isolated Environments"]
+        V2["scenarios/dga_detection/.venv<br>(M-ATH Kernel)"]:::kernelStyle
+        V3["scenarios/process_clustering/.venv<br>(M-ATH Kernel)"]:::kernelStyle
     end
 
-    subgraph Reusable_Code ["Shared Packages"]
-        DL["detection_logics (Installed in editable mode)"]
+    subgraph Shared ["Shared Libraries"]
+        DL["detection_logics<br>(Editable Mode)"]:::libStyle
     end
 
     JL -->|Launches with| V1
@@ -244,6 +269,8 @@ graph TD
     
     V2 -.->|Depends on| DL
     V3 -.->|Depends on| DL
+
+    class Host hostStyle;
 ```
 
 Local notebooks are executed in scenario-isolated virtual environments to prevent dependency conflicts, and registered as custom kernels for JupyterLab:
