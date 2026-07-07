@@ -225,10 +225,9 @@ def main() -> int:
         else:
             cleaned_models.append(m)
             
-    if has_other and model_details:
-        cleaned_models.append(model_details)
-    elif not cleaned_models and model_details:
-        cleaned_models.append(model_details)
+    if model_details:
+        if model_details not in cleaned_models:
+            cleaned_models.append(model_details)
         
     model_used = ", ".join(cleaned_models)
     if not model_used:

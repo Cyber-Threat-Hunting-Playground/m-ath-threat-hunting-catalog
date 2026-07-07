@@ -234,3 +234,90 @@ _No response_
     check_other_data_sources.process_proposal_issue(mock_repo, mock_token, mock_issue_num)
     assert len(create_called) == 0
 
+
+def test_propose_scenario_helpers(monkeypatch):
+    # Add scripts to path to import propose_scenario
+    sys.path.append(str(PROJECT_ROOT / "scripts"))
+    import propose_scenario
+
+    # Test prompt_input
+    input_values = ["", "my value"]
+    def mock_input(prompt):
+        return input_values.pop(0)
+    monkeypatch.setattr("builtins.input", mock_input)
+    val = propose_scenario.prompt_input("test: ", required=True)
+    assert val == "my value"
+
+    # Test prompt_menu
+    input_values = ["", "invalid", "1, 3"]
+    menu_opts = ["Opt 1", "Opt 2", "Opt 3"]
+    selected = propose_scenario.prompt_menu("Menu: ", menu_opts, multi=True, required=True)
+    assert selected == ["Opt 1", "Opt 3"]
+
+
+def test_propose_scenario_main_interactive(tmp_path, monkeypatch):
+    # Add scripts to path to import propose_scenario
+    sys.path.append(str(PROJECT_ROOT / "scripts"))
+    import propose_scenario
+    
+    # Set up temp catalog and scenarios folder
+    temp_catalog = tmp_path / "catalog.csv"
+    temp_catalog.write_text(
+        "Ref,Folder,Use case,Description,Model used,Data needed,Source\nM01,compromised,Use Case 1,,AD logs,,",
+        encoding="utf-8"
+    )
+    
+    temp_scenarios = tmp_path / "scenarios"
+    temp_scenarios.mkdir()
+    
+    # Overwrite the globals in the imported module
+    monkeypatch.setattr(propose_scenario, "CATALOG_PATH", temp_catalog)
+    monkeypatch.setattr(propose_scenario, "SCENARIOS_DIR", temp_scenarios)
+    
+    # Mock inputs for the interactive questionnaire
+    input_values = [
+        "Interactive Use Case", # Scenario Title
+        "Interactive Description", # Scenario Description
+        "2", # PEAK M-ATH Sub-process: Clustering
+        "2, 4", # Model: Unsupervised Clustering, Time-Series
+        "My Clustering Specs", # Model Details
+        "Why M-ATH applies explanation", # Why M-ATH applies
+        "2, 3", # Data needed: EDR, Windows Event
+        "Custom Syslog", # Other Data Sources
+        "https://example.com/ref", # Reference / Source
+    ]
+    
+    def mock_input(prompt):
+        return input_values.pop(0)
+        
+    monkeypatch.setattr("builtins.input", mock_input)
+    monkeypatch.setattr(sys, "argv", ["propose_scenario.py"])
+    
+    exit_code = propose_scenario.main()
+    assert exit_code == 0
+    
+    # Check folder bootstrapped
+    folder_name = "interactive_use_case"
+    folder_path = temp_scenarios / folder_name
+    assert folder_path.exists()
+    assert (folder_path / "README.md").exists()
+    
+    # Check catalog update
+    with open(temp_catalog, "r", encoding="utf-8") as f:
+        reader = list(csv.DictReader(f))
+        
+    assert len(reader) == 2
+    new_entry = reader[1]
+    assert new_entry["Ref"] == "M02"
+    assert new_entry["Folder"] == folder_name
+    assert new_entry["Use case"] == "Interactive Use Case"
+    assert new_entry["Description"] == "Interactive Description"
+    assert "Unsupervised Clustering" in new_entry["Model used"]
+    assert "Time-Series" in new_entry["Model used"]
+    assert "My Clustering Specs" in new_entry["Model used"]
+    assert "Endpoint Detection & Response (EDR) logs" in new_entry["Data needed"]
+    assert "Windows Event logs" in new_entry["Data needed"]
+    assert "Custom Syslog" in new_entry["Data needed"]
+    assert new_entry["Source"] == "https://example.com/ref"
+
+

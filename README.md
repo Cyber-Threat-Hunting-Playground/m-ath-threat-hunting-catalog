@@ -219,6 +219,7 @@ See [data_transform/README.md](./data_transform/README.md) for usage flags and e
 │   ├── bootstrap_scenarios.py
 │   ├── fetch_sentinelone.py
 │   ├── json_to_csv.py
+│   ├── propose_scenario.py        # CLI helper to propose/bootstrap scenarios
 │   ├── run_analysis.py
 │   └── update_catalog_folders.py
 └── scripts/                       # Utility and runner scripts
@@ -366,3 +367,11 @@ The repository contains continuous integration workflows configured in `.github/
   - Updates Unicode confusables data under `detection_logics/resources/unicode_TR39_confusables.txt` dynamically.
 * **Add VirusTotal verdicts** ([virustotal-high-confidence.yml](./.github/workflows/virustotal-high-confidence.yml)):
   - Enriches high-confidence findings automatically with VirusTotal verdicts upon change.
+
+## Contributing
+
+If you would like to propose or implement a new threat hunting scenario, please read our [Contributing Guide](CONTRIBUTING.md) for details on:
+* Proposing and bootstrapping new scenarios using `python scripts/propose_scenario.py`.
+* Setting up scenario-specific virtual environments.
+* Running the local test suite and pre-commit compliance checks.
+* Submitting Pull Requests for review.
