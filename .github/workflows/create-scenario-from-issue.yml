@@ -1,0 +1,104 @@
+name: Create Scenario from Issue
+
+on:
+  issues:
+    types: [labeled]
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: 'Issue number to process'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  generate-scenario:
+    if: |
+      (github.event_name == 'issues' && github.event.label.name == 'create-scenario') ||
+      github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Generate scenario files and update catalog
+        id: generate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            ISSUE_NUM="${{ github.event.inputs.issue_number }}"
+          else
+            ISSUE_NUM="${{ github.event.issue.number }}"
+          fi
+          
+          python .github/scripts/generate_scenario_from_issue.py --issue-number "$ISSUE_NUM"
+
+      - name: Create Pull Request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          REF="${{ steps.generate.outputs.ref }}"
+          USE_CASE="${{ steps.generate.outputs.use_case }}"
+          SUBMITTER="${{ steps.generate.outputs.submitter }}"
+          FOLDER="${{ steps.generate.outputs.folder }}"
+          
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            ISSUE_NUM="${{ github.event.inputs.issue_number }}"
+          else
+            ISSUE_NUM="${{ github.event.issue.number }}"
+          fi
+
+          BRANCH_NAME="propose-scenario-${REF}"
+          
+          # Setup git config
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Create and switch to new branch
+          git checkout -b "$BRANCH_NAME"
+          
+          # Add and commit changes
+          git add scenarios/catalog.csv scenarios/"$FOLDER"
+          git commit -m "Bootstrap scenario $REF: $USE_CASE"
+          
+          # Push branch
+          git push origin "$BRANCH_NAME" --force
+          
+          # Create Pull Request using gh CLI
+          echo "Closes #${ISSUE_NUM}" > pr_body.txt
+          echo "" >> pr_body.txt
+          echo "This pull request was automatically generated in response to Issue #${ISSUE_NUM} submitted by @${SUBMITTER}." >> pr_body.txt
+          echo "" >> pr_body.txt
+          echo "It includes:" >> pr_body.txt
+          echo "1. Entry for \`$REF\` in \`scenarios/catalog.csv\`" >> pr_body.txt
+          echo "2. Bootstrapped scenario directory \`scenarios/${FOLDER}/\` with standard templates." >> pr_body.txt
+
+          PR_URL=$(gh pr create \
+            --title "Propose Scenario $REF: $USE_CASE" \
+            --body-file pr_body.txt \
+            --base main \
+            --head "$BRANCH_NAME")
+            
+          echo "PR created: $PR_URL"
+          
+          # Add a comment to the issue
+          gh issue comment "$ISSUE_NUM" --body "🚀 Pull Request has been automatically generated: $PR_URL"
+          
+          # Update issue labels: remove 'create-scenario', add 'scenario-pr-created'
+          gh label create scenario-pr-created --color 0e8a16 --description "Pull request created for this scenario" || true
+          
+          gh issue edit "$ISSUE_NUM" --remove-label "create-scenario" --add-label "scenario-pr-created"

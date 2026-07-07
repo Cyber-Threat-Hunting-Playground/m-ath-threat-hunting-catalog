@@ -1,0 +1,107 @@
+name: "🧪 Propose Threat Hunting Scenario"
+description: Propose a new Model-Assisted Threat Hunting (M-ATH) scenario.
+title: "M-ATH Proposal: [Your Scenario Title]"
+labels: ["proposed-scenario"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### Propose a Model-Assisted Threat Hunting (M-ATH) Scenario
+        Thank you for contributing to the Threat Hunting M-ATH Catalog!
+        
+        M-ATH uses machine learning, statistical, or mathematical models to identify indicators of threat activity.
+        
+        Please fill out this form to propose a new scenario. Your proposal will be automatically processed into a Pull Request when approved by a maintainer (by applying the `create-scenario` label).
+
+  - type: input
+    id: use_case
+    attributes:
+      label: Scenario Title / Use Case
+      description: The name or title of the proposed threat hunting use case.
+      placeholder: e.g., Dictionary DGA detection via Supervised Classification
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Scenario Description
+      description: Provide a clear, high-level explanation of the threat, how the detection methodology works, and what the analyst does.
+      placeholder: e.g., Detect potential DNS tunneling by identifying high-entropy subdomains and query volume spikes. A supervised classification model classifies domains based on lexical features...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: peak_subprocess
+    attributes:
+      label: PEAK M-ATH Sub-process
+      description: Select the category from the Splunk PEAK Framework that this scenario aligns with.
+      options:
+        - "Forecasting and Anomaly Detection"
+        - "Clustering"
+        - "Model-Assisted Methods"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: model_used
+    attributes:
+      label: Model or Statistical Method
+      description: Select the model types or statistical methods used (select all that apply).
+      options:
+        - label: "Supervised Classification (e.g. XGBoost, Random Forest)"
+        - label: "Unsupervised Clustering (e.g. K-Means, DBSCAN)"
+        - label: "Anomaly Detection (e.g. Isolation Forest, Autoencoders)"
+        - label: "Time-Series / Periodicity Analysis"
+        - label: "Natural Language Processing (NLP) / LLM"
+        - label: "Graph / Network Analysis"
+        - label: "Composite / Risk Scoring"
+        - label: "Other (Specify details in the next section)"
+
+  - type: input
+    id: model_details
+    attributes:
+      label: Model Details / Specifics
+      description: Provide any specific details about the algorithm or library used (optional).
+      placeholder: e.g., Isolation Forest using scikit-learn, or Fourier Transform for periodicity.
+
+  - type: textarea
+    id: math_explanation
+    attributes:
+      label: Why does M-ATH apply?
+      description: Explain why simple rules, signatures, or static baselines are not enough and why a model/statistical method is necessary.
+      placeholder: e.g., Attacker timing jitter makes static periodicity detection fail. A clustering/statistical approach is required to identify beaconing patterns under random jitter.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: data_needed
+    attributes:
+      label: Telemetry & Data Sources Needed
+      description: Select the primary data sources required for this scenario (select all that apply).
+      options:
+        - label: Active Directory (AD) logs
+        - label: Endpoint Detection & Response (EDR) logs
+        - label: Windows Event logs
+        - label: DNS query logs
+        - label: Web server / WAF logs
+        - label: Database (DB) logs
+        - label: NetFlow / Network traffic logs
+        - label: VPN / Remote access logs
+        - label: Threat Intelligence telemetry (e.g. VirusTotal)
+
+  - type: input
+    id: other_data
+    attributes:
+      label: Other Data Sources
+      description: List any other telemetry or data sources not listed above.
+      placeholder: e.g., Office 365 logs, CloudTrail
+
+  - type: input
+    id: source_ref
+    attributes:
+      label: References / Source
+      description: Links to research, articles, source repositories, or inspiration.
+      placeholder: e.g., https://github.com/...
+    validations:
+      required: false
