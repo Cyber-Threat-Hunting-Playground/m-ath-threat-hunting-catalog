@@ -34,7 +34,7 @@ body:
     attributes:
       label: Sample Log Lines / Schema
       description: Provide sample log entries (JSON, CEF, key-value, raw text) or link to official documentation outlining the schema (optional).
-      placeholder: e.g., {"eventVersion": "1.08", "userIdentity": ...}
+      placeholder: 'e.g., {"eventVersion": "1.08", "userIdentity": ...}'
     validations:
       required: false
 
