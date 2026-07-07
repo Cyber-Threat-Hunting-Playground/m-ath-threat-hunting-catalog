@@ -164,3 +164,73 @@ https://github.com/example/ref
     assert new_entry["Model used"] == "Unsupervised Clustering (e.g. K-Means, DBSCAN), Custom clustering"
     assert new_entry["Data needed"] == "Active Directory (AD) logs, Windows Event logs, Custom SIEM logs"
     assert new_entry["Source"] == "https://github.com/example/ref"
+
+
+def test_check_other_data_sources(monkeypatch):
+    import check_other_data_sources
+
+    issue_body_with_other = """### Other Data Sources
+
+Custom Firewall logs
+"""
+    issue_body_without_other = """### Other Data Sources
+
+_No response_
+"""
+
+    mock_issue_num = "123"
+    mock_repo = "owner/repo"
+    mock_token = "gh_token"
+
+    get_issue_called = 0
+    create_called = []
+    check_exists_returns = False
+
+    def mock_get_github_issue(repo, issue_number, token):
+        nonlocal get_issue_called
+        get_issue_called += 1
+        assert repo == mock_repo
+        assert issue_number == mock_issue_num
+        assert token == mock_token
+        # Return title, body, user
+        if get_issue_called == 1:
+            return "Mock Title", issue_body_with_other, "testuser"
+        else:
+            return "Mock Title", issue_body_without_other, "testuser"
+
+    def mock_check_existing_issue(repo, token, title):
+        assert repo == mock_repo
+        assert token == mock_token
+        return check_exists_returns
+
+    def mock_create_tracking_issue(repo, token, title, proposal_issue_num, other_data):
+        assert repo == mock_repo
+        assert token == mock_token
+        create_called.append((title, proposal_issue_num, other_data))
+
+    monkeypatch.setattr(check_other_data_sources, "get_github_issue", mock_get_github_issue)
+    monkeypatch.setattr(check_other_data_sources, "check_existing_issue", mock_check_existing_issue)
+    monkeypatch.setattr(check_other_data_sources, "create_tracking_issue", mock_create_tracking_issue)
+
+    # Case 1: Has other data, does not exist already
+    check_other_data_sources.process_proposal_issue(mock_repo, mock_token, mock_issue_num)
+    assert len(create_called) == 1
+    assert create_called[0] == (
+        "[Telemetry Request] Support for 'Custom Firewall logs' (Proposed in #123)",
+        "123",
+        "Custom Firewall logs"
+    )
+
+    # Case 2: Has other data, but already exists
+    create_called.clear()
+    check_exists_returns = True
+    check_other_data_sources.process_proposal_issue(mock_repo, mock_token, mock_issue_num)
+    assert len(create_called) == 0
+
+    # Case 3: No other data
+    create_called.clear()
+    check_exists_returns = False
+    # Next call to get_github_issue will return issue_body_without_other
+    check_other_data_sources.process_proposal_issue(mock_repo, mock_token, mock_issue_num)
+    assert len(create_called) == 0
+
