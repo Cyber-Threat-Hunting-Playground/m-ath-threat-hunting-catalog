@@ -1,0 +1,48 @@
+name: "🔌 Propose New Data Source"
+description: Propose adding support for a new telemetry or data source.
+title: "[Telemetry Request] Support for [Data Source Name]"
+labels: ["new-telemetry-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### Propose a New Telemetry / Data Source
+        Thank you for helping us expand the coverage of our threat hunting scenarios!
+        
+        Use this form to suggest a new telemetry source. This will help maintainers catalog and prepare the parsing templates.
+
+  - type: input
+    id: data_source_name
+    attributes:
+      label: Data Source Name
+      description: The name of the proposed telemetry or log source.
+      placeholder: e.g., CloudTrail logs, Office 365 Audit logs, Syslog
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description & Use Cases
+      description: Explain what events/data are tracked by this log source, and what scenarios or threat behaviors they would help detect.
+      placeholder: e.g., AWS CloudTrail logs track API operations. These are essential for hunting cloud persistence, privilege escalation, or resource abuse.
+    validations:
+      required: true
+
+  - type: textarea
+    id: sample_logs
+    attributes:
+      label: Sample Log Lines / Schema
+      description: Provide sample log entries (JSON, CEF, key-value, raw text) or link to official documentation outlining the schema (optional).
+      placeholder: e.g., {"eventVersion": "1.08", "userIdentity": ...}
+    validations:
+      required: false
+
+  - type: input
+    id: reference_links
+    attributes:
+      label: Reference Documentation Links
+      description: Links to official developer guides, schema definitions, or example threat hunts using this source (optional).
+      placeholder: e.g., https://docs.aws.amazon.com/awscloudtrail/latest/userguide/
+    validations:
+      required: false
