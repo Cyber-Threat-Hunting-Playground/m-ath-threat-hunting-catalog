@@ -129,13 +129,6 @@ flowchart TD
 - JupyterLab or Jupyter Notebook
 - Optional: copy `.env.example` to `.env` and set `VT_API_KEY` for SHA-256 lookups against the VirusTotal files API (skipped if the key is missing)
 
-## GitHub Codespaces
-
-1. Open the repository in a Codespace.
-2. If the Codespace was created before dependency changes, run **Dev Containers: Rebuild Container** from the Command Palette so the devcontainer reinstalls packages from `install/requirements.txt`.
-3. Place CSV exports into this scenario's `input/` folder.
-4. Open `abnormal_dll_loading_common_applications.ipynb` and run all cells.
-
 ## Output
 
 | File | Description |
@@ -153,4 +146,4 @@ flowchart TD
 4. Open `abnormal_dll_loading_common_applications.ipynb` and run all cells.
 5. Review `output/abnormal_dll_loading_results.csv` and the KPI figure.
 
-For pipeline execution (GitHub Actions / Codespaces), see the main [README](../../README.md).
+For pipeline execution (GitHub Actions), see the main [README](../../README.md).

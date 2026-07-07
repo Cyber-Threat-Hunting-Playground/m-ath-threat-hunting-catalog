@@ -49,20 +49,6 @@ This scenario can be driven either by a direct Splunk query inside the notebook 
 - Install required packages: `splunk-sdk`, `pandas`, `numpy`, `scikit-learn`, `matplotlib`, `seaborn`
 - Network access and valid credentials for the target Splunk instance if using the direct-query notebook flow
 
-## GitHub Codespaces
-
-This scenario is compatible with GitHub Codespaces.
-
-1. Open the repository in a Codespace.
-2. Run **Dev Containers: Rebuild Container** from the Command Palette if the Codespace was created before dependency changes.
-3. Install any packages not already present in the Codespace environment, especially `splunk-sdk` and other scenario-specific analysis libraries listed above.
-4. Provide Splunk credentials or adapt the notebook to use files under `input/`.
-5. Open the notebook and run all cells.
-
-Notes:
-- This scenario can query Splunk directly, so Codespaces network access and credentials must match your environment.
-- Keep the notebook running from inside the repository workspace so relative paths resolve correctly.
-
 ## Output
 
 | File | Description |
@@ -83,4 +69,4 @@ Notes:
 - `MAX_LAG_SEC = 1800` controls the autocorrelation horizon
 - Review ensemble thresholds such as `contamination`, `nu`, `eps`, `min_samples`, and the final `score_ensemble` cutoff to fit your environment
 
-For pipeline execution (GitHub Actions / Codespaces), see the main [README](../../README.md).
+For pipeline execution (GitHub Actions), see the main [README](../../README.md).

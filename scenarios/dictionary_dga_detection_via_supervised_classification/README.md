@@ -51,20 +51,6 @@ Place domain CSV files in `input/`. Each CSV must contain a `domain` column or `
   - `m-ath_pretrain_word_list.pkl`
 - If any assets are missing, retrieve them from the upstream Splunk PEAK project
 
-## GitHub Codespaces
-
-This scenario is compatible with GitHub Codespaces.
-
-1. Open the repository in a Codespace.
-2. Run **Dev Containers: Rebuild Container** from the Command Palette if the Codespace was created before dependency changes.
-3. Install the scenario-specific packages with `pip install -r requirements-dga.txt`.
-4. Ensure the required model assets are present in `models/`.
-5. Place the scenario input data into this scenario's `input/` folder, then open the notebook and run all cells.
-
-Notes:
-- Codespaces gives you the shared repository environment, but this scenario still requires the extra packages and model assets listed above.
-- Keep the notebook running from inside the repository workspace so relative paths resolve correctly.
-
 ## Output
 
 | File | Description |
@@ -82,4 +68,4 @@ Notes:
 - https://github.com/THORCollective/HEARTH/blob/main/Alchemy/M006.md
 - https://github.com/splunk/PEAK/tree/main/dictionary_dga_classifier
 
-For pipeline execution (GitHub Actions / Codespaces), see the main [README](../../README.md).
+For pipeline execution (GitHub Actions), see the main [README](../../README.md).

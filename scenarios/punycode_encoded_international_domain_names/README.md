@@ -243,7 +243,7 @@ The notebook:
 - Configure `VT_API_KEY` before running the notebook. The current notebook implementation requires VirusTotal access and raises an error if the key is missing.
 - Provide `VT_API_KEY` using one of these options:
 	- Preferred for local notebook use: copy `.env.example` to `.env` in this scenario folder and set `VT_API_KEY=...`
-	- Fallback: set OS environment variable `VT_API_KEY` (works on Windows/Linux, GitHub Actions, and GitHub Codespaces)
+	- Fallback: set OS environment variable `VT_API_KEY` (works on Windows/Linux and GitHub Actions)
 - Optional multi-provider TI: set `OTX_API_KEY` and/or `PULSEDIVE_API_KEY` in `.env` or as OS environment variables to enable AlienVault OTX and Pulsedive enrichment. Both are free-tier APIs. If not set, the notebook skips these providers gracefully.
 - Tune `config/engine_weights.json` to enable/disable engines, adjust engine weights, and set `score_threshold` before running.
 - Optional: create repository-level exclusion files if you want the notebook to suppress known benign matches:
@@ -251,21 +251,6 @@ The notebook:
 	- `exclusions/excluded_values+reasons.conf` — value+reason pairs to exclude
 	- `exclusions/excluded_parent_domains.conf` — parent domains to exclude by suffix (any domain ending with `.parent-domain` is excluded)
 	- `exclusions/reviewed_parent_domains.conf` — parent domains already reviewed and confirmed as genuine findings; prevents them from being re-proposed in false-positive candidates (see [Reviewing false-positive candidates](#reviewing-false-positive-candidates))
-
-## GitHub Codespaces
-
-This scenario is compatible with GitHub Codespaces.
-
-1. Open the repository in a Codespace.
-2. If the Codespace was created before dependency changes, run **Dev Containers: Rebuild Container** from the Command Palette so the devcontainer reinstalls packages from `install/requirements.txt`.
-3. Add `VT_API_KEY` as a Codespaces secret before running the notebook. The current notebook implementation does not skip VT lookups; it stops if the key is missing.
-4. Place DNS CSV exports into this scenario's `input/` folder.
-5. Open `punycode_idn.ipynb` and run all cells.
-
-Notes:
-- The notebook resolves paths relative to the repository root, so it works in local clones and Codespaces.
-- The notebook writes outputs even when no findings are produced by creating an empty results CSV with the expected schema.
-- Visualization cells require the shared Python environment from `install/requirements.txt`.
 
 ## Output
 
@@ -305,7 +290,7 @@ After each run, `output/punycode_idn_false_positive_parent_domains_candidates.cs
 
 On the next run, parent domains in `reviewed_parent_domains.conf` are silently removed from the false-positive candidates export so they no longer appear as suggestions.
 
-For pipeline execution (GitHub Actions / Codespaces), see the main [README](../../README.md).
+For pipeline execution (GitHub Actions), see the main [README](../../README.md).
 
 ## Programmatic execution (Papermill and script)
 

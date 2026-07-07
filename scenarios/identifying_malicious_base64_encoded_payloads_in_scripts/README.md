@@ -47,19 +47,6 @@ Place command-line or script telemetry exports in `input/`.
 - Install shared dependencies from `install/requirements.txt`
 - This scenario includes `base64_payloads.ipynb` as the analysis notebook
 
-## GitHub Codespaces
-
-This scenario is compatible with GitHub Codespaces.
-
-1. Open the repository in a Codespace.
-2. If the Codespace was created before dependency changes, run **Dev Containers: Rebuild Container** from the Command Palette so the devcontainer reinstalls packages from `install/requirements.txt`.
-3. Place the scenario input data into this scenario's `input/` folder.
-4. Open the notebook and run all cells.
-
-Notes:
-- The notebook resolves paths relative to the repository workspace and works in local clones and Codespaces.
-- If this scenario later adds extra dependencies beyond `install/requirements.txt`, install them inside the Codespace before running the notebook.
-
 ## Output
 
 | File | Description |
@@ -76,4 +63,4 @@ Notes:
 
 - https://github.com/THORCollective/HEARTH/blob/main/Alchemy/M005.md
 
-For pipeline execution (GitHub Actions / Codespaces), see the main [README](../../README.md).
+For pipeline execution (GitHub Actions), see the main [README](../../README.md).

@@ -48,19 +48,6 @@ Place CSV input files in `input/` or nested subfolders such as `input/sentinelon
 - Review any exclusions stored under `exclusions/` before running the notebook
 - This scenario includes `dns_url_anomaly_analysis.ipynb` as the analysis notebook
 
-## GitHub Codespaces
-
-This scenario is compatible with GitHub Codespaces.
-
-1. Open the repository in a Codespace.
-2. If the Codespace was created before dependency changes, run **Dev Containers: Rebuild Container** from the Command Palette so the devcontainer reinstalls packages from `install/requirements.txt`.
-3. Place the scenario input data into this scenario's `input/` folder.
-4. Open the notebook and run all cells.
-
-Notes:
-- The notebook resolves paths relative to the repository workspace and works in local clones and Codespaces.
-- Review the scenario-local `exclusions/` folder before running in Codespaces, the same as you would locally.
-
 ## Output
 
 | File | Description |
@@ -73,4 +60,4 @@ Notes:
 2. Open `dns_url_anomaly_analysis.ipynb` and run all cells.
 3. Review the generated findings in `output/`.
 
-For pipeline execution (GitHub Actions / Codespaces), see the main [README](../../README.md).
+For pipeline execution (GitHub Actions), see the main [README](../../README.md).

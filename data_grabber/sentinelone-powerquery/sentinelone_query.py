@@ -11,7 +11,7 @@ warnings.simplefilter('ignore', InsecureRequestWarning)
 # Load configuration: env vars (GitHub Actions) take precedence over config.json
 def _load_config():
     config = {}
-    # Try config.json first (for local/Codespaces)
+    # Try config.json first (for local use)
     config_path = os.environ.get("SENTINELONE_CONFIG", "config.json")
     if os.path.isfile(config_path):
         try:

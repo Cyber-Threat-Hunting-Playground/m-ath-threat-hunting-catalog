@@ -177,7 +177,6 @@ See [data_transform/README.md](./data_transform/README.md) for usage flags and e
 ## Project Structure
 
 ```
-├── .devcontainer/                 # Codespaces/devcontainer configuration
 ├── .github/                       # GitHub Actions & validation helper scripts
 │   ├── scripts/
 │   │   ├── create_data_transform_issues.py
@@ -232,7 +231,6 @@ See [data_transform/README.md](./data_transform/README.md) for usage flags and e
 | Component | Purpose |
 |-----------|---------|
 | **GitHub Actions** | Quality assurance: checks catalog sync, checks scenario folder integrity, tests data transform compliance, updates Unicode confusables, and enrichments |
-| **GitHub Codespaces** | Interactive development and notebook editing on cloud instances |
 | **Local execution** | Fully supported using central JupyterLab runner (`.jupyter_venv`) and scenario-isolated environments (`.venv`) registered as custom Jupyter kernels |
 
 ## Setup & Local Development
