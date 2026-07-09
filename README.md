@@ -37,6 +37,7 @@ graph TD
     classDef prepareStyle fill:#E0F7FA,stroke:#00838F,stroke-width:1.5px,color:#004D40;
     classDef executeStyle fill:#E8EAF6,stroke:#283593,stroke-width:1.5px,color:#1A237E;
     classDef actStyle fill:#FBE9E7,stroke:#D84315,stroke-width:1.5px,color:#5D4037;
+    classDef knowledgeStyle fill:#E8F5E9,stroke:#2E7D32,stroke-width:1.5px,color:#1B5E20;
     classDef nodeStyle fill:#FFFFFF,stroke:#37474F,stroke-width:1px,color:#263238;
 
     subgraph Phase1 ["1. Prepare Phase"]
@@ -56,11 +57,19 @@ graph TD
         H -->|Analyst Triage & Investigation| I[🛠️ Incident Response & Remediation]
     end
 
+    subgraph Phase4 ["4. Knowledge Phase"]
+        I --> J[📝 Document Lessons Learned]
+        J --> K[💡 Optimize Telemetry & Detections]
+    end
+
+    K -->|Feedback Loop / Lessons Learned| A
+
     %% Apply Classes
     class Phase1 prepareStyle;
     class Phase2 executeStyle;
     class Phase3 actStyle;
-    class A,B,C,D,E,F,G,H,I nodeStyle;
+    class Phase4 knowledgeStyle;
+    class A,B,C,D,E,F,G,H,I,J,K nodeStyle;
 ```
 
 ---
