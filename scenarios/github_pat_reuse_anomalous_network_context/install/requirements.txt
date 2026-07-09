@@ -1,0 +1,3 @@
+# Scenario-specific dependencies
+# Add packages required ONLY for this scenario here.
+# Shared dependencies are installed from the repository root: install/requirements.txt
