@@ -6,10 +6,10 @@ This guide describes how to configure your local environment, start JupyterLab, 
 
 ```mermaid
 graph TD
-    classDef hostStyle fill:#ECEFF1,stroke:#37474F,stroke-dasharray: 5 5;
-    classDef venvStyle fill:#E1F5FE,stroke:#0288D1,stroke-width:2px;
-    classDef kernelStyle fill:#E8F5E9,stroke:#2E7D32,stroke-width:2px;
-    classDef libStyle fill:#FFF3E0,stroke:#F57C00,stroke-width:2px;
+    classDef hostStyle fill:#ECEFF1,stroke:#37474F,stroke-dasharray: 5 5,color:#263238;
+    classDef venvStyle fill:#E1F5FE,stroke:#0288D1,stroke-width:2px,color:#01579B;
+    classDef kernelStyle fill:#E8F5E9,stroke:#2E7D32,stroke-width:2px,color:#1B5E20;
+    classDef libStyle fill:#FFF3E0,stroke:#F57C00,stroke-width:2px,color:#E65100;
 
     subgraph Host ["JupyterLab Server Host"]
         JL[JupyterLab Run Environment]

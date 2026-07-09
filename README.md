@@ -88,11 +88,11 @@ The [detection_logics/](./detection_logics) package contains modular, reusable s
 
 ```mermaid
 flowchart TD
-    classDef inputStyle fill:#ECEFF1,stroke:#455A64,stroke-width:1.5px;
-    classDef routerStyle fill:#E8EAF6,stroke:#3F51B5,stroke-width:1.5px;
-    classDef logicStyle fill:#E8F5E9,stroke:#2E7D32,stroke-width:1.5px;
-    classDef aggStyle fill:#FFF8E1,stroke:#F57F17,stroke-width:2px;
-    classDef outStyle fill:#FFEBEE,stroke:#C62828,stroke-width:2px;
+    classDef inputStyle fill:#ECEFF1,stroke:#455A64,stroke-width:1.5px,color:#263238;
+    classDef routerStyle fill:#E8EAF6,stroke:#3F51B5,stroke-width:1.5px,color:#1A237E;
+    classDef logicStyle fill:#E8F5E9,stroke:#2E7D32,stroke-width:1.5px,color:#1B5E20;
+    classDef aggStyle fill:#FFF8E1,stroke:#F57F17,stroke-width:2px,color:#E65100;
+    classDef outStyle fill:#FFEBEE,stroke:#C62828,stroke-width:2px,color:#B71C1C;
 
     Raw[Raw Telemetry Input]:::inputStyle --> Router{Telemetry Context?}:::routerStyle
     
