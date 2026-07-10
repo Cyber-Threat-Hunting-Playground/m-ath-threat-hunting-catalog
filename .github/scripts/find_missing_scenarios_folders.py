@@ -12,7 +12,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 SCENARIOS_DIR = REPO_ROOT / "scenarios"
 CATALOG_PATH = SCENARIOS_DIR / "catalog.csv"
 
-REQUIRED_SUBFOLDERS = {"input", "output"}
+REQUIRED_SUBFOLDERS = {"input", "output", "config"}
 
 
 def _use_case_to_folder(s: str) -> str:

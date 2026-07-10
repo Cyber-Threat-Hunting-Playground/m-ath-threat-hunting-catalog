@@ -21,7 +21,7 @@ def get_scenario_folders() -> set[str]:
         return set()
     folders = set()
     for item in SCENARIOS_DIR.iterdir():
-        if item.is_dir():
+        if item.is_dir() and not item.name.startswith("#"):
             folders.add(item.name)
     return folders
 

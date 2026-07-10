@@ -42,3 +42,10 @@ The `detection_logics` package currently contains the following rules:
   - `malicious` → `+2`
   - `suspicious` (and other non-clean/undetected verdicts) → `+1`
 - **Reason Tag:** `vt_verdict_not_clean`
+
+### 3. SentinelOne AI SIEM & LLM Triage ([s1_triage.py](./s1_triage.py))
+- **Checks:** Queries the SentinelOne Deep Visibility / PowerQuery API for the surrounding process execution lineage and file/network activity matching the candidate lead's process tree, then triages it using an OpenAI-compatible LLM.
+- **Scoring:** Reduces the initial candidate risk score proportional to the LLM's false positive confidence level if `is_false_positive` is returned as `true`.
+- **Reason Tag:** `s1_triage`
+- **Activation:** Strictly opt-in per scenario. Requires a config file at `scenarios/[scenario_name]/config/.env` defining LLM and S1 credentials, or specifying `USE_GLOBAL_AI_CONFIG=true` to load them from environment variables.
+

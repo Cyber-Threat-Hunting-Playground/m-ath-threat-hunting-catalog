@@ -4,6 +4,8 @@ Each logic is a separate file. Apply via apply_dns_logics() or apply_url_logics(
 """
 from . import dns_suspicious_string
 from . import vt_verdict_not_clean
+from . import s1_triage
+from .s1_triage import apply_s1_triage
 
 _DNS_LOGIC_FUNCTIONS = [
     ("dns_suspicious_string", dns_suspicious_string.apply),

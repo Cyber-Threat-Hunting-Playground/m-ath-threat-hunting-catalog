@@ -141,6 +141,7 @@ https://github.com/example/ref
     assert folder_path.exists()
     assert (folder_path / "input" / ".gitkeep").exists()
     assert (folder_path / "output" / ".gitkeep").exists()
+    assert (folder_path / "config" / ".env.example").exists()
     assert (folder_path / "install" / "requirements.txt").exists()
     assert (folder_path / "install" / "install_dependencies.sh").exists()
     assert (folder_path / "install" / "install_dependencies.ps1").exists()

@@ -61,13 +61,14 @@ def ensure_label_exists(owner: str, repo: str) -> None:
             raise SystemExit(f"API error {e.code}: {e.read().decode()}")
 
 
+
 def create_issue(owner: str, repo: str, title: str, folder_name: str) -> None:
     url = f"https://api.github.com/repos/{owner}/{repo}/issues"
     body = (
         f"The scenario `{folder_name}` is listed in `scenarios/catalog.csv` but either:\n"
         f"- The folder `scenarios/{folder_name}/` does not exist, or\n"
-        f"- The folder does not contain both `input/` and `output/` subfolders.\n\n"
-        f"Please create the folder structure: `scenarios/{folder_name}/input/` and `scenarios/{folder_name}/output/`."
+        f"- The folder does not contain the required `input/`, `output/`, and `config/` subfolders.\n\n"
+        f"Please create the folder structure: `scenarios/{folder_name}/input/`, `scenarios/{folder_name}/output/`, and `scenarios/{folder_name}/config/`."
     )
     data = {"title": title, "body": body, "labels": [LABEL]}
     api_request("POST", url, data)

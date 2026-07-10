@@ -33,6 +33,19 @@ REQUIREMENTS_CONTENT = """# Scenario-specific dependencies
 # Add packages required ONLY for this scenario here.
 """
 
+SCENARIO_ENV_EXAMPLE_CONTENT = """# Set to true to fallback to system environment variables for LLM/S1 credentials
+USE_GLOBAL_AI_CONFIG=true
+
+# Or configure scenario-specific endpoints/credentials here:
+# LLM_API_KEY=your_key
+# LLM_API_BASE=http://localhost:11434/v1
+# LLM_MODEL_NAME=gpt-4-turbo
+# SENTINELONE_URL=https://<your-s1-tenant-url>
+# SENTINELONE_TOKEN=<your-s1-service-token>
+# SENTINELONE_VERIFY_SSL=true
+"""
+
+
 
 def slugify(s: str) -> str:
     """Generate a filesystem-friendly directory name from a string."""
@@ -251,8 +264,10 @@ def main() -> int:
     scenario_path = SCENARIOS_DIR / folder
     (scenario_path / "input").mkdir(parents=True, exist_ok=True)
     (scenario_path / "output").mkdir(parents=True, exist_ok=True)
+    (scenario_path / "config").mkdir(parents=True, exist_ok=True)
     (scenario_path / "input" / ".gitkeep").touch()
     (scenario_path / "output" / ".gitkeep").touch()
+    (scenario_path / "config" / ".env.example").write_text(SCENARIO_ENV_EXAMPLE_CONTENT, encoding="utf-8")
 
     install_dir = scenario_path / "install"
     install_dir.mkdir(exist_ok=True)
