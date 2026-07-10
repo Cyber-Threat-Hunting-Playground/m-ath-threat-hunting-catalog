@@ -34,7 +34,7 @@ REQUIREMENTS_CONTENT = """# Scenario-specific dependencies
 """
 
 SCENARIO_ENV_EXAMPLE_CONTENT = """# Set to true to fallback to system environment variables for LLM/S1 credentials
-USE_GLOBAL_AI_CONFIG=true
+USE_GLOBAL_AI_CONFIG=false
 
 # Or configure scenario-specific endpoints/credentials here:
 # LLM_API_KEY=your_key
