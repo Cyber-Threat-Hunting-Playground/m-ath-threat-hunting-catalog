@@ -20,6 +20,10 @@ def main() -> int:
         print(f"Notebook not found: {NOTEBOOK}", file=sys.stderr)
         return 1
 
+    output_dir = SCENARIO_DIR / "output"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output_name = "dns_url_anomaly_analysis_executed.ipynb"
+
     result = subprocess.run(
         [
             sys.executable,
@@ -29,7 +33,10 @@ def main() -> int:
             "--to",
             "notebook",
             "--execute",
-            "--inplace",
+            "--output-dir",
+            str(output_dir),
+            "--output",
+            output_name,
             "--ExecutePreprocessor.timeout=600",
             str(NOTEBOOK),
         ],

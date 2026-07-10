@@ -10,6 +10,47 @@ TEXT_EXTENSIONS = {
     ".css", ".input", ".example"
 }
 
+def load_company_details():
+    """Reads sensitive company details from config/.env if it exists, along with environment variables."""
+    details = {}
+    
+    # 1. Load from config/.env
+    repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    env_path = os.path.join(repo_root, "config", ".env")
+    if os.path.exists(env_path):
+        try:
+            with open(env_path, "r", encoding="utf-8", errors="ignore") as fh:
+                for line in fh:
+                    line = line.strip()
+                    if not line or line.startswith("#"):
+                        continue
+                    if "=" in line:
+                        key, val = line.split("=", 1)
+                        key = key.strip()
+                        val = val.strip()
+                        # Strip surrounding quotes
+                        if (val.startswith('"') and val.endswith('"')) or (val.startswith("'") and val.endswith("'")):
+                            val = val[1:-1]
+                        details[key] = val
+        except Exception as e:
+            print(f"Warning: Could not read configuration file {env_path}: {e}", file=sys.stderr)
+
+    # 2. Extract sensitive strings to block
+    sensitive_strings = []
+    keys_to_extract = ["COMPANY_NAMES", "COMPANY_DOMAINS", "COMPANY_URLS", "COMPANY_EMAILS"]
+    
+    for key in keys_to_extract:
+        # Fallback to environment variables if set
+        val = details.get(key) or os.environ.get(key)
+        if val:
+            for part in val.split(","):
+                part = part.strip()
+                # Ignore placeholders like <your-company-name> or empty parts
+                if part and not (part.startswith("<") and part.endswith(">")):
+                    sensitive_strings.append((key, part))
+                    
+    return sensitive_strings
+
 def get_staged_files():
     try:
         # ACM: Added, Copied, Modified
@@ -31,6 +72,8 @@ def main():
     staged_files = get_staged_files()
     if not staged_files:
         return 0
+
+    sensitive_strings = load_company_details()
 
     failed = False
     print("Running pre-commit sanity checks...")
@@ -65,20 +108,73 @@ def main():
             failed = True
             continue
 
-        # 4. Check for company name (COMPANYNAME) inside text-based files
-        if ext in TEXT_EXTENSIONS:
+        # 3b. Check for Jupyter notebook execution data / metadata
+        if ext == ".ipynb":
+            if os.path.exists(norm_path):
+                try:
+                    import json
+                    with open(norm_path, "r", encoding="utf-8", errors="ignore") as fh:
+                        nb = json.load(fh)
+                    
+                    has_execution_data = False
+                    details = []
+                    
+                    for idx, cell in enumerate(nb.get("cells", []), start=1):
+                        if cell.get("cell_type") == "code":
+                            # Check execution count
+                            if cell.get("execution_count") is not None:
+                                has_execution_data = True
+                                details.append(f"Cell #{idx} has execution count: {cell.get('execution_count')}")
+                            
+                            # Check outputs
+                            if cell.get("outputs") != []:
+                                has_execution_data = True
+                                details.append(f"Cell #{idx} has non-empty outputs")
+                                
+                            # Check execution timing metadata
+                            metadata = cell.get("metadata", {})
+                            if "execution" in metadata:
+                                has_execution_data = True
+                                details.append(f"Cell #{idx} has execution timing metadata")
+                                
+                    if has_execution_data:
+                        print(f"ERROR: Staged notebook contains execution data/metadata: {f}", file=sys.stderr)
+                        for d in details[:5]:  # print first 5 issues to keep output clean
+                            print(f"       - {d}", file=sys.stderr)
+                        if len(details) > 5:
+                            print(f"       - ... and {len(details) - 5} more issues", file=sys.stderr)
+                        print(f"       Please run: python scripts/clean_notebook.py \"{f}\"", file=sys.stderr)
+                        failed = True
+                except Exception as e:
+                    print(f"Warning: Could not parse {f} as JSON for notebook validation: {e}", file=sys.stderr)
+
+        # 4. Check for company name (COMPANYNAME) and sensitive company details inside text-based files
+        if ext in TEXT_EXTENSIONS and base_name not in {".env", ".env.example"}:
             if os.path.exists(norm_path):
                 try:
                     with open(norm_path, "r", encoding="utf-8", errors="ignore") as fh:
                         content = fh.read()
-                        if "COMPANYNAME" in content.lower():
-                            # Find exact lines for helpful output
+                        content_lower = content.lower()
+                        
+                        # Check for hardcoded placeholder
+                        if "companyname" in content_lower:
                             lines = content.splitlines()
                             print(f"ERROR: Company-related reference (COMPANYNAME) found in: {f}", file=sys.stderr)
                             for idx, line in enumerate(lines, start=1):
-                                if "COMPANYNAME" in line.lower():
+                                if "companyname" in line.lower():
                                     print(f"       Line {idx}: {line.strip()}", file=sys.stderr)
                             failed = True
+                            
+                        # Check for dynamically configured sensitive strings
+                        for key, pattern in sensitive_strings:
+                            pattern_lower = pattern.lower()
+                            if pattern_lower in content_lower:
+                                lines = content.splitlines()
+                                print(f"ERROR: Sensitive company info ({key}: '{pattern}') found in: {f}", file=sys.stderr)
+                                for idx, line in enumerate(lines, start=1):
+                                    if pattern_lower in line.lower():
+                                        print(f"       Line {idx}: {line.strip()}", file=sys.stderr)
+                                failed = True
                 except Exception as e:
                     print(f"Warning: Could not read {f} for content validation: {e}", file=sys.stderr)
 
