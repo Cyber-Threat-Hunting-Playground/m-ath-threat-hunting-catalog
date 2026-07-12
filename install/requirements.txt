@@ -10,7 +10,7 @@ nbconvert>=7.0
 papermill>=2.7.0
 pandas>=3.0.3
 requests>=2.34.2  # required for VirusTotal API integrations
-seaborn>=0.13
+seaborn>=0.13.2
 tabulate
 wordcloud>=1.9.6
 pytest>=8.0.0
