@@ -1,8 +1,0 @@
-Timestamp,Scenario,ExecutionTimeSec,InputMB,ThroughputMBs,RowsProcessed,RowsPerSec
-2026-07-06T21:05:03,dns_url_anomaly_analysis,0.9150,0.0000,0.0000,0,0.00
-2026-07-06T21:42:52,dns_url_anomaly_analysis,0.9430,0.0000,0.0000,0,0.00
-2026-07-09T20:22:30,dns_url_anomaly_analysis,0.9608,0.0000,0.0000,0,0.00
-2026-07-10T07:49:17,dns_url_anomaly_analysis,2.7260,0.0000,0.0000,0,0.00
-2026-07-10T07:58:10,dns_url_anomaly_analysis,3.6625,0.0000,0.0000,0,0.00
-2026-07-10T08:03:01,dns_url_anomaly_analysis,3.3095,0.0000,0.0000,0,0.00
-2026-07-10T08:04:27,dns_url_anomaly_analysis,3.2374,0.0000,0.0000,0,0.00

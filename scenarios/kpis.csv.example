@@ -1,0 +1,2 @@
+Timestamp,Scenario,ExecutionTimeSec,InputMB,ThroughputMBs,RowsProcessed,RowsPerSec
+2026-07-06T21:05:03,dns_url_anomaly_analysis,0.9150,0.0000,0.0000,0,0.00

@@ -60,4 +60,8 @@ Thumbs.db
 
 # PEAK Compliance Reports
 scenarios/**/.peak_compliance_report.md
-peak_compliance_results.json
+peak_compliance_results.json
+
+# KPIs results
+scenarios/kpis.csv
+!scenarios/kpis.csv.example
