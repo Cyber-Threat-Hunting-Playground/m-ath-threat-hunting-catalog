@@ -60,3 +60,9 @@ Place process execution exports in `input/`. Preserve parent-child relationships
 3. Review the rare or never-seen parent-child chains written to `output/`.
 
 For pipeline execution (GitHub Actions), see the main [README](../../README.md).
+
+## Atomic Red Team Tests
+
+| Test Name | Test ID | Platform | Identified Date | Human Confirmed |
+| --- | --- | --- | --- | --- |
+| AutoIt Script Execution | a9b93f17-31cb-435d-a462-5e838a2a6026 | windows | 2026-07-14 | No |

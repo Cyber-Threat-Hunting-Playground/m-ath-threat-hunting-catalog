@@ -60,3 +60,12 @@ Place DNS CSV files in `input/`. Include enough history to observe repeated requ
 3. Review the scored beaconing candidates in `output/`.
 
 For pipeline execution (GitHub Actions), see the main [README](../../README.md).
+
+## Atomic Red Team Tests
+
+| Test Name | Test ID | Platform | Identified Date | Human Confirmed |
+| --- | --- | --- | --- | --- |
+| DNS Large Query Volume | 1700f5d6-5a44-487b-84de-bc66f507b0a6 | windows | 2026-07-14 | No |
+| DNS Regular Beaconing | 3efc144e-1af8-46bb-8ca2-1376bb6db8b6 | windows | 2026-07-14 | No |
+| DNS Long Domain Query | fef31710-223a-40ee-8462-a396d6b66978 | windows | 2026-07-14 | No |
+| DNS C2 | e7bf9802-2e78-4db9-93b5-181b7bcd37d7 | windows | 2026-07-14 | No |

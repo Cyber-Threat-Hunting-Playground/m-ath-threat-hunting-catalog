@@ -64,4 +64,7 @@ peak_compliance_results.json
 
 # KPIs results
 scenarios/kpis.csv
-!scenarios/kpis.csv.example
+!scenarios/kpis.csv.example
+
+# EvidenceForge generated files
+*_evidenceforge.*

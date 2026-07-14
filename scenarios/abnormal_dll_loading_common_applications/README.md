@@ -147,3 +147,14 @@ flowchart TD
 5. Review `output/abnormal_dll_loading_results.csv` and the KPI figure.
 
 For pipeline execution (GitHub Actions), see the main [README](../../README.md).
+
+## Atomic Red Team Tests
+
+| Test Name | Test ID | Platform | Identified Date | Human Confirmed |
+| --- | --- | --- | --- | --- |
+| DLL Search Order Hijacking - amsi.dll | 8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3 | windows | 2026-07-14 | No |
+| Phantom Dll Hijacking - WinAppXRT.dll | 46ed938b-c617-429a-88dc-d49b5c9ffedb | windows | 2026-07-14 | No |
+| Phantom Dll Hijacking - ualapi.dll | 5898902d-c5ad-479a-8545-6f5ab3cfc87f | windows | 2026-07-14 | No |
+| DLL Side-Loading using the Notepad++ GUP.exe binary | 65526037-7079-44a9-bda1-2cb624838040 | windows | 2026-07-14 | No |
+| DLL Side-Loading using the dotnet startup hook environment variable | d322cdd7-7d60-46e3-9111-648848da7c02 | windows | 2026-07-14 | No |
+| DLL Search Order Hijacking,DLL Sideloading Of KeyScramblerIE.DLL Via KeyScrambler.EXE | c095ad8e-4469-4d33-be9d-6f6d1fb21585 | windows | 2026-07-14 | No |

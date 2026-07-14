@@ -330,3 +330,9 @@ flowchart TD
 | `c2_network_beaconing_false_positive_candidates.csv` | Destinations that look genuinely suspicious and should stay in findings | Add their `dst_key` to `exclusions/reviewed_values.conf` so they stop being re-proposed as FP candidates |
 
 Each execution therefore helps the next one avoid false positives and catch more genuinely suspicious beaconing.
+
+## Atomic Red Team Tests
+
+| Test Name | Test ID | Platform | Identified Date | Human Confirmed |
+| --- | --- | --- | --- | --- |
+| Telnet C2 | 3b0df731-030c-4768-b492-2a3216d90e53 | windows | 2026-07-14 | No |

@@ -1,0 +1,76 @@
+name: Check Atomic Red Team Scenarios
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Runs daily at midnight UTC
+  workflow_dispatch:      # Allows manual trigger
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check-scenarios:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history so we can branch and push
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: Run compatibility check script
+        run: |
+          python scripts/check_art_scenarios.py
+
+      - name: Check for changes
+        id: git-check
+        run: |
+          git status --porcelain
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Pull Request on changes
+        if: steps.git-check.outputs.changes == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
+          # Create and switch to the target branch
+          git checkout -b update-art-scenarios
+          
+          # Add changes and commit
+          git add .
+          git commit -m "Update potential Atomic Red Team scenarios"
+          
+          # Force-push to remote branch
+          git push origin update-art-scenarios --force
+          
+          # Check if there is an existing open PR for this branch
+          pr_exists=$(gh pr list --head update-art-scenarios --state open --json number --jq '.[0].number')
+          
+          if [ -z "$pr_exists" ]; then
+            echo "Creating a new Pull Request..."
+            gh pr create \
+              --title "Update potential Atomic Red Team scenarios" \
+              --body "Automated daily check identified new potential Atomic Red Team tests for mapped scenarios. Please review and confirm telemetry generation capability." \
+              --head update-art-scenarios \
+              --base main
+          else
+            echo "Pull Request already exists: PR #$pr_exists"
+          fi

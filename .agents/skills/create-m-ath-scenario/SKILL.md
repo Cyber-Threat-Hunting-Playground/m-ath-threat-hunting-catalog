@@ -30,16 +30,27 @@ scenarios/<scenario_folder_name>/
 ├── <scenario_folder_name>.ipynb
 ├── requirements-<suffix>.txt (optional)
 ├── config/
-│   └── .env (optional config/secrets template)
+│   ├── .env (optional config/secrets template)
+│   └── evidence_forge.yaml (optional, if using EvidenceForge)
 ├── input/
-│   └── validation_sample.csv (at least one sample data file)
+│   ├── validation_sample.csv (for manual/real datasets) OR
+│   └── validation_sample_evidenceforge.csv (generated synthetically)
 ├── output/
 │   └── .gitkeep (to track folder empty by default)
 ├── models/ (optional, for saved pickle/onnx files)
 └── exclusions/ (optional, for false positive lists)
 ```
 
-### 3. Write local README.md
+### 3. Create or Generate Input Telemetry
+For testing and validation, a scenario needs sample input data under `input/`. You can either provide manual real-world logs or generate synthetic ones:
+- **Synthetic Logs (EvidenceForge):** Create an EvidenceForge configuration file named `config/evidence_forge.yaml` inside your scenario folder. Generate the telemetry by running:
+  ```powershell
+  python scripts/generate_telemetry.py --scenario scenarios/<scenario_folder_name>
+  ```
+  This creates `input/validation_sample_evidenceforge.csv`, which is ignored in git via [.gitignore](../../.gitignore).
+- **Manual Data:** Place a sanitized and anonymized CSV file directly in `input/validation_sample.csv`.
+
+### 4. Write local README.md
 The local `README.md` must contain:
 - **Ref ID** (matching catalog)
 - **Description** of the detection
@@ -49,10 +60,10 @@ The local `README.md` must contain:
 - **Data Needed** & **Data Collection Initial Query**
 - **Prerequisites** and **Execution Instructions**
 
-### 4. Code structure of the Notebook
+### 5. Code structure of the Notebook
 Every notebook must follow this structure:
 1. **Prepare Phase:** Imports, environment checks, loading modular logic from `detection_logics` (e.g., [s1_triage.py](../../detection_logics/s1_triage.py)).
-2. **Execute Phase:** Read data from `input/validation_sample.csv`, perform feature extraction, apply model/heuristics, and flag candidates.
+2. **Execute Phase:** Read data from `input/validation_sample_evidenceforge.csv` (if using EvidenceForge) or `input/validation_sample.csv`, perform feature extraction, apply model/heuristics, and flag candidates.
 3. **Act Phase:** Output candidates to `output/` as a CSV file containing scored leads.
 
 ### Verification Checklist

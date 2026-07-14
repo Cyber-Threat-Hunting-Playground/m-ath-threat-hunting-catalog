@@ -64,3 +64,19 @@ Place command-line or script telemetry exports in `input/`.
 - https://github.com/THORCollective/HEARTH/blob/main/Alchemy/M005.md
 
 For pipeline execution (GitHub Actions), see the main [README](../../README.md).
+
+## Atomic Red Team Tests
+
+| Test Name | Test ID | Platform | Identified Date | Human Confirmed |
+| --- | --- | --- | --- | --- |
+| Decode base64 Data into Script | f45df6be-2e1e-4136-a384-8f18ab3826fb | macos, linux | 2026-07-14 | No |
+| Execute base64-encoded PowerShell | a50d5a97-2531-499e-a1de-5544c74432c6 | windows | 2026-07-14 | No |
+| Execute base64-encoded PowerShell from Windows Registry | 450e7218-7915-4be4-8b9b-464a49eafcec | windows | 2026-07-14 | No |
+| Execution from Compressed File | f8c8a909-5f29-49ac-9244-413936ce6d1f | windows | 2026-07-14 | No |
+| DLP Evasion via Sensitive Data in VBA Macro over email | 129edb75-d7b8-42cd-a8ba-1f3db64ec4ad | windows | 2026-07-14 | No |
+| DLP Evasion via Sensitive Data in VBA Macro over HTTP | e2d85e66-cb66-4ed7-93b1-833fc56c9319 | windows | 2026-07-14 | No |
+| Obfuscated Command in PowerShell | 8b3f4ed6-077b-4bdd-891c-2d237f19410f | windows | 2026-07-14 | No |
+| Obfuscated Command Line using special Unicode characters | e68b945c-52d0-4dd9-a5e8-d173d70c448f | windows | 2026-07-14 | No |
+| Snake Malware Encrypted crmlog file | 7e47ee60-9dd1-4269-9c4f-97953b183268 | windows | 2026-07-14 | No |
+| Execution from Compressed JScript File | fad04df1-5229-4185-b016-fb6010cd87ac | windows | 2026-07-14 | No |
+| Obfuscated PowerShell Command via Character Array | 6683baf0-6e77-4f58-b114-814184ea8150 | windows | 2026-07-14 | No |

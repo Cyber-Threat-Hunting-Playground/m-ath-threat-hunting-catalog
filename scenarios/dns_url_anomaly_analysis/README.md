@@ -61,3 +61,11 @@ Place CSV input files in `input/` or nested subfolders such as `input/sentinelon
 3. Review the generated findings in `output/`.
 
 For pipeline execution (GitHub Actions), see the main [README](../../README.md).
+
+## Atomic Red Team Tests
+
+| Test Name | Test ID | Platform | Identified Date | Human Confirmed |
+| --- | --- | --- | --- | --- |
+| Malicious User Agents - Powershell | 81c13829-f6c9-45b8-85a6-053366d55297 | windows | 2026-07-14 | No |
+| Malicious User Agents - CMD | dc3488b0-08c7-4fea-b585-905c83b48180 | windows | 2026-07-14 | No |
+| Malicious User Agents - Nix | 2d7c471a-e887-4b78-b0dc-b0df1f2e0658 | linux, macos | 2026-07-14 | No |

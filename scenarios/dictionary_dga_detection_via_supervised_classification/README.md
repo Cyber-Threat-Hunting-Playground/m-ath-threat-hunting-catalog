@@ -69,3 +69,9 @@ Place domain CSV files in `input/`. Each CSV must contain a `domain` column or `
 - https://github.com/splunk/PEAK/tree/main/dictionary_dga_classifier
 
 For pipeline execution (GitHub Actions), see the main [README](../../README.md).
+
+## Atomic Red Team Tests
+
+| Test Name | Test ID | Platform | Identified Date | Human Confirmed |
+| --- | --- | --- | --- | --- |
+| DGA Simulation (Python) | cc367493-3a00-4c4a-a685-16b73339167c | linux | 2026-07-14 | No |
