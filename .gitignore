@@ -57,3 +57,7 @@ Thumbs.db
 
 # "Hide Env" config file extension
 .hide
+
+# PEAK Compliance Reports
+scenarios/**/.peak_compliance_report.md
+peak_compliance_results.json

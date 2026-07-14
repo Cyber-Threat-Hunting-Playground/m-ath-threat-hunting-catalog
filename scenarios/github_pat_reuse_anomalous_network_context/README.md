@@ -1,6 +1,6 @@
 # GitHub PAT reuse in anomalous network context
 
-**Ref:** M26
+**Ref:** M27
 
 ## Description
 
@@ -9,6 +9,17 @@ This scenario detects possible theft and reuse of GitHub Personal Access Tokens 
 ## M-ATH Sub-process
 
 **Forecasting and Anomaly Detection** - Build per-token behavioral baselines from historical audit events and score newer events for anomalous deviations.
+
+## PEAK Framework Alignment
+
+This scenario follows the **PEAK Threat Hunting Framework** ([Splunk](https://www.splunk.com/en_us/blog/security/peak-framework-math-model-assisted-threat-hunting.html)) using **Model-Assisted Threat Hunting (M-ATH)**.
+
+| Phase | Focus | Notebook sections |
+|-------|-------|-------------------|
+| **Prepare** | Select topic, research, identify datasets, select algorithms | Environment setup, imports, configuration |
+| **Execute** | Gather data, pre-process, apply model, analyze, refine, escalate | Data loading, preprocessing, model execution, candidate filtering |
+| **Act** | Document findings, preserve hunt, create detections/playbooks | KPI tables, results export |
+| **Knowledge** | Continuous improvement, communicate findings, feed back into next run | Feedback loops, model retraining, static rule creation |
 
 ## Method
 

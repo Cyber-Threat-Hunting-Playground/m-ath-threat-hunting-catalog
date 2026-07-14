@@ -231,6 +231,36 @@ def main():
                 except Exception as e:
                     print(f"Warning: Could not read {f} for sensitive path validation: {e}", file=sys.stderr)
 
+    # 6. Run PEAK compliance checks on modified scenarios
+    if os.environ.get("PEAK_SKIP_COMPLIANCE") != "1":
+        scenarios_to_audit = set()
+        repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        for f in staged_files:
+            norm_path = os.path.normpath(f)
+            path_parts = norm_path.split(os.sep)
+            if len(path_parts) > 1 and path_parts[0] == "scenarios":
+                scenario_folder = path_parts[1]
+                if os.path.isdir(os.path.join(repo_root, "scenarios", scenario_folder)):
+                    scenarios_to_audit.add(scenario_folder)
+        
+        if scenarios_to_audit:
+            print("\nRunning PEAK M-ATH compliance audits...")
+            for folder in sorted(scenarios_to_audit):
+                audit_script = os.path.join(repo_root, "scripts", "audit_peak_compliance.py")
+                res = subprocess.run(
+                    [sys.executable, audit_script, "--scenario", folder],
+                    capture_output=True,
+                    text=True
+                )
+                if res.returncode != 0:
+                    print(f"ERROR: Scenario '{folder}' is not compliant with PEAK M-ATH guidelines.", file=sys.stderr)
+                    print(res.stdout, file=sys.stderr)
+                    print(res.stderr, file=sys.stderr)
+                    failed = True
+                else:
+                    if res.stdout.strip():
+                        print(res.stdout)
+
     if failed:
         print("\nCommit ABORTED. Please fix the errors above and try again.", file=sys.stderr)
         return 1

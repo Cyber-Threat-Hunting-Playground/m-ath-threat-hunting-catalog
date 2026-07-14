@@ -15,7 +15,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.append(str(PROJECT_ROOT / ".github" / "scripts"))
 
 from generate_scenario_from_issue import (
-    slugify, clean_value, parse_issue_body, get_next_ref, readme_template,
+    slugify, clean_value, parse_issue_body, get_next_ref, readme_template, notebook_template,
     CATALOG_PATH, SCENARIOS_DIR, PS_WRAPPER_CONTENT, SH_WRAPPER_CONTENT, REQUIREMENTS_CONTENT
 )
 
@@ -208,6 +208,9 @@ def bootstrap_scenario_from_body(body: str) -> None:
     # Parse source
     source = clean_value(sections.get("References / Source", ""))
 
+    # Parse PEAK sub-process
+    peak_subprocess = clean_value(sections.get("PEAK M-ATH Sub-process", ""))
+
     ref = get_next_ref(CATALOG_PATH)
     folder = slugify(use_case)
 
@@ -243,7 +246,11 @@ def bootstrap_scenario_from_body(body: str) -> None:
         "Source": source
     }
 
-    (scenario_path / "README.md").write_text(readme_template(row, math_explanation), encoding="utf-8")
+    (scenario_path / "README.md").write_text(readme_template(row, math_explanation, peak_subprocess), encoding="utf-8")
+
+    # Generate default Jupyter Notebook template
+    notebook_file = scenario_path / f"{folder}.ipynb"
+    notebook_file.write_text(notebook_template(use_case), encoding="utf-8")
 
     # Update scenarios/catalog.csv
     fieldnames = ["Ref", "Folder", "Use case", "Description", "Model used", "Data needed", "Source"]

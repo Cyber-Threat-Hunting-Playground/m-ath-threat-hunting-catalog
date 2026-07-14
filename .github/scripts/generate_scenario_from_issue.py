@@ -135,13 +135,15 @@ def get_github_issue(repo: str, issue_number: str, token: str) -> tuple[str, str
         sys.exit(1)
 
 
-def readme_template(row: dict, math_explanation: str) -> str:
+def readme_template(row: dict, math_explanation: str, peak_subprocess: str = "") -> str:
     """Generate README.md content for the new scenario."""
     use_case = row.get("Use case", "Threat Hunt Scenario")
     ref = row.get("Ref", "")
     desc = row.get("Description", "")
     data = row.get("Data needed", "")
     source = row.get("Source", "")
+    
+    peak_sub = peak_subprocess or "Model-Assisted Methods"
     
     return f"""# {use_case}
 
@@ -151,9 +153,24 @@ def readme_template(row: dict, math_explanation: str) -> str:
 
 {desc}
 
+## M-ATH Sub-process
+
+{peak_sub}
+
 ## Why M-ATH Applies
 
 {math_explanation or "This scenario uses statistical/model-assisted methods to detect threat activity that cannot be easily caught with static signatures."}
+
+## PEAK Framework Alignment
+
+This scenario follows the **PEAK Threat Hunting Framework** ([Splunk](https://www.splunk.com/en_us/blog/security/peak-framework-math-model-assisted-threat-hunting.html)) using **Model-Assisted Threat Hunting (M-ATH)**.
+
+| Phase | Focus | Notebook sections |
+|-------|-------|-------------------|
+| **Prepare** | Select topic, research, identify datasets, select algorithms | Environment setup, imports, configuration |
+| **Execute** | Gather data, pre-process, apply model, analyze, refine, escalate | Data loading, preprocessing, model execution, candidate filtering |
+| **Act** | Document findings, preserve hunt, create detections/playbooks | KPI tables, results export |
+| **Knowledge** | Continuous improvement, communicate findings, feed back into next run | Feedback loops, model retraining, static rule creation |
 
 ## Data needed
 
@@ -177,6 +194,109 @@ Results are written to `output/`.
 2. Run the scenario notebook or script
 3. Review outputs in `output/`
 """
+
+
+def notebook_template(use_case: str) -> str:
+    """Generate default Jupyter Notebook JSON content with PEAK M-ATH phase headers."""
+    nb_dict = {
+        "cells": [
+            {
+                "cell_type": "markdown",
+                "metadata": {},
+                "source": [
+                    f"# PEAK M-ATH — {use_case}\n",
+                    "\n",
+                    "## Phase 1: PREPARE — Plan your Approach\n",
+                    "Select topic, research, identify datasets, and select algorithms.\n"
+                ]
+            },
+            {
+                "cell_type": "code",
+                "execution_count": None,
+                "metadata": {},
+                "outputs": [],
+                "source": [
+                    "# Imports and environment setup\n",
+                    "import os\n",
+                    "import sys\n",
+                    "import pandas as pd\n",
+                    "from pathlib import Path\n",
+                    "\n",
+                    "# Load shared logic from detection_logics\n",
+                    "# import detection_logics\n",
+                    "\n",
+                    "# Initialize KPI tracker\n",
+                    "from scripts.kpi_tracker import KPITracker\n",
+                    "tracker = KPITracker(scenario_name=\"" + use_case.replace('"', '\\"') + "\", input_dir=\"input\")\n"
+                ]
+            },
+            {
+                "cell_type": "markdown",
+                "metadata": {},
+                "source": [
+                    "## Phase 2: EXECUTE — Experimentation Time\n",
+                    "Gather data, pre-process, apply model, analyze, refine, and escalate findings.\n"
+                ]
+            },
+            {
+                "cell_type": "code",
+                "execution_count": None,
+                "metadata": {},
+                "outputs": [],
+                "source": [
+                    "# Load and preprocess data\n",
+                    "# df = pd.read_csv(\"input/validation_sample.csv\")\n",
+                    "\n",
+                    "# Apply model or statistical analysis\n",
+                    "# ...\n"
+                ]
+            },
+            {
+                "cell_type": "markdown",
+                "metadata": {},
+                "source": [
+                    "## Phase 3: ACT — Wrapping Up the Investigation\n",
+                    "Document findings, preserve hunt, and create detections/playbooks.\n"
+                ]
+            },
+            {
+                "cell_type": "code",
+                "execution_count": None,
+                "metadata": {},
+                "outputs": [],
+                "source": [
+                    "# Write results to output/\n",
+                    "# df.to_csv(\"output/results.csv\", index=False)\n",
+                    "\n",
+                    "# Stop KPI tracker and report performance\n",
+                    "tracker.record_rows(0) # Update with actual rows count\n",
+                    "tracker.stop_and_report()\n"
+                ]
+            },
+            {
+                "cell_type": "markdown",
+                "metadata": {},
+                "source": [
+                    "## Phase 4: KNOWLEDGE — Continuous Improvement\n",
+                    "Model retraining, detection optimization, and ingestion pipeline adjustments.\n"
+                ]
+            }
+        ],
+        "metadata": {
+            "kernelspec": {
+                "display_name": "Python 3 (ipykernel)",
+                "language": "python",
+                "name": "python3"
+            },
+            "language_info": {
+                "name": "python"
+            }
+        },
+        "nbformat": 4,
+        "nbformat_minor": 2
+    }
+    return json.dumps(nb_dict, indent=1)
+
 
 
 def main() -> int:
@@ -225,6 +345,9 @@ def main() -> int:
     if not math_explanation:
         print("Error: 'Why does M-ATH apply?' is empty or missing.", file=sys.stderr)
         return 1
+
+    # Extract PEAK sub-process
+    peak_subprocess = clean_value(sections.get("PEAK M-ATH Sub-process", ""))
 
     # Extract model used (combine checklist + details)
     models_checked = parse_checkboxes(sections.get("Model or Statistical Method", ""))
@@ -294,7 +417,11 @@ def main() -> int:
         "Source": source
     }
 
-    (scenario_path / "README.md").write_text(readme_template(row, math_explanation), encoding="utf-8")
+    (scenario_path / "README.md").write_text(readme_template(row, math_explanation, peak_subprocess), encoding="utf-8")
+
+    # Generate default Jupyter Notebook template
+    notebook_file = scenario_path / f"{folder}.ipynb"
+    notebook_file.write_text(notebook_template(use_case), encoding="utf-8")
 
     # Update scenarios/catalog.csv
     # Read current lines to make sure headers match

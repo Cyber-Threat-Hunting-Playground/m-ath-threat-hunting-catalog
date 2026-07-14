@@ -1,0 +1,53 @@
+# Run Splunk PEAK M-ATH compliance auditing on all scenarios
+# Creates/updates GitHub Issues for non-compliant scenarios and fails the build.
+name: Check PEAK M-ATH Compliance
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'scenarios/**'
+      - 'scripts/audit_peak_compliance.py'
+      - '.github/workflows/check-peak-compliance.yml'
+  pull_request:
+    branches:
+      - main
+      - master
+    paths:
+      - 'scenarios/**'
+      - 'scripts/audit_peak_compliance.py'
+      - '.github/workflows/check-peak-compliance.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check-compliance:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Run PEAK compliance audit
+        run: |
+          python scripts/audit_peak_compliance.py --all --json peak_compliance_results.json --warn-only
+
+      - name: Create or update GitHub Issues for non-compliance
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python .github/scripts/create_peak_compliance_issues.py
+
+      - name: Enforce build failure on non-compliance
+        run: |
+          python -c "import json; d=json.load(open('peak_compliance_results.json')); exit(1 if d.get('status') == 'failed' else 0)"

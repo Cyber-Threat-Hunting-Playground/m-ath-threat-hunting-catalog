@@ -151,6 +151,17 @@ https://github.com/example/ref
     assert "## Why M-ATH Applies" in readme_content
     assert "Simple signatures are not enough because database query volumes naturally vary." in readme_content
     assert "**Ref:** M02" in readme_content
+    assert "## M-ATH Sub-process" in readme_content
+    assert "## PEAK Framework Alignment" in readme_content
+
+    # Verify default Jupyter notebook is generated
+    notebook_file = folder_path / f"{folder_name}.ipynb"
+    assert notebook_file.exists()
+    notebook_content = notebook_file.read_text(encoding="utf-8")
+    assert "Phase 1: PREPARE" in notebook_content
+    assert "Phase 2: EXECUTE" in notebook_content
+    assert "Phase 3: ACT" in notebook_content
+    assert "Phase 4: KNOWLEDGE" in notebook_content
 
     # Verify catalog update
     with open(catalog_file, "r", encoding="utf-8") as f:
@@ -302,6 +313,7 @@ def test_propose_scenario_main_interactive(tmp_path, monkeypatch):
     folder_path = temp_scenarios / folder_name
     assert folder_path.exists()
     assert (folder_path / "README.md").exists()
+    assert (folder_path / f"{folder_name}.ipynb").exists()
     
     # Check catalog update
     with open(temp_catalog, "r", encoding="utf-8") as f:
