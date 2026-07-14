@@ -176,6 +176,8 @@ Create the isolated environment for a scenario (e.g., `process_clustering`), reg
 | **Local Environments** | Keep scenarios isolated using virtual environments registered as custom Jupyter kernels. | See [docs/development.md](./docs/development.md) |
 | **GitHub Actions** | Daily validations checking folder structures, python compliance, and catalog synchronization. | See [docs/workflows.md](./docs/workflows.md) |
 | **Development Security** | Git pre-commit hooks to verify telemetry is sanitized and no private keys are committed. | See [docs/development.md](./docs/development.md#git-pre-commit-hooks-development-security) |
+| **Agentic Custom Skills** | Workspace-specific instructions guiding AI assistants to bootstrap, verify, and audit scenarios. | See [docs/custom_skills.md](./docs/custom_skills.md) |
+
 
 <details>
 <summary>📂 View Repository Directory Structure</summary>
