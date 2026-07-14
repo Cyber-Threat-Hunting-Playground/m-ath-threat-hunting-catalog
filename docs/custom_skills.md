@@ -28,7 +28,7 @@ The active skills are defined in the [.agents/skills/](../.agents/skills/) direc
 
 ## 💡 How to Use Custom Skills with AI Assistants
 
-When pair-programming with Antigravity, the skills are loaded automatically. You can explicitly direct the assistant to execute them by typing commands or refering to them by name:
+When pair-programming with Agentic, the skills are loaded automatically. You can explicitly direct the assistant to execute them by typing commands or refering to them by name:
 *   *"Use the `create-m-ath-scenario` skill to bootstrap a scenario for process injection."*
 *   *"Run `verify-m-ath-scenario` on the dictionary DGA notebook."*
 *   *"Perform a `peak-compliance-check` on our new scenario."*
