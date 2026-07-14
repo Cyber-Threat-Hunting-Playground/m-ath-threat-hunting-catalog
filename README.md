@@ -136,6 +136,19 @@ Telemetry sanitization and preprocessing tools are provided in the [data_transfo
 
 ---
 
+### 4. Custom Agentic Skills
+
+This project leverages custom agentic skills in the [skills directory](./.agents/skills/) to automate workflows and assist AI-driven development:
+* **create-m-ath-scenario** ([SKILL.md](./.agents/skills/create-m-ath-scenario/SKILL.md)): Bootstraps new M-ATH threat hunting scenarios.
+* **verify-m-ath-scenario** ([SKILL.md](./.agents/skills/verify-m-ath-scenario/SKILL.md)): Performs automated validation checks on Jupyter notebooks.
+* **peak-compliance-check** ([SKILL.md](./.agents/skills/peak-compliance-check/SKILL.md)): Audits scenarios for PEAK framework alignment.
+* **shared-logic-integrator** ([SKILL.md](./.agents/skills/shared-logic-integrator/SKILL.md)): Integrates reusable scoring and enrichment rules from `detection_logics`.
+
+👉 Refer to the [Custom Agentic Skills Guide](./docs/custom_skills.md) for usage examples and guidelines on how to run or request these skills during pair programming.
+
+---
+
+
 ## ⚡ Quick Start
 
 For full instructions, virtual environment settings, and Jupyter kernel configurations, see the [Local Setup & Development Guide](./docs/development.md).
