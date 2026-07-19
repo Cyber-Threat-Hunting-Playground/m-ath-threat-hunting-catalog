@@ -14,4 +14,4 @@ seaborn>=0.13.2
 tabulate
 wordcloud>=1.9.6
 pytest>=8.0.0
-openai>=2.45.0
+openai>=2.46.0
