@@ -158,3 +158,4 @@ For pipeline execution (GitHub Actions), see the main [README](../../README.md).
 | DLL Side-Loading using the Notepad++ GUP.exe binary | 65526037-7079-44a9-bda1-2cb624838040 | windows | 2026-07-14 | No |
 | DLL Side-Loading using the dotnet startup hook environment variable | d322cdd7-7d60-46e3-9111-648848da7c02 | windows | 2026-07-14 | No |
 | DLL Search Order Hijacking,DLL Sideloading Of KeyScramblerIE.DLL Via KeyScrambler.EXE | c095ad8e-4469-4d33-be9d-6f6d1fb21585 | windows | 2026-07-14 | No |
+| DLL Search Order Hijacking - ntprint | e96b8105-d7f7-484e-8d81-2d0c7086971b | windows | 2026-07-24 | No |
