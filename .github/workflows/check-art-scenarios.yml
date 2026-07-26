@@ -62,15 +62,17 @@ jobs:
           git push origin update-art-scenarios --force
           
           # Check if there is an existing open PR for this branch
-          pr_exists=$(gh pr list --head update-art-scenarios --state open --json number --jq '.[0].number')
+          pr_exists=$(gh pr list --head update-art-scenarios --state open --json number --jq '.[0].number' 2>/dev/null || true)
           
-          if [ -z "$pr_exists" ]; then
+          if [ -z "$pr_exists" ] || [ "$pr_exists" = "null" ]; then
             echo "Creating a new Pull Request..."
-            gh pr create \
+            if ! gh pr create \
               --title "Update potential Atomic Red Team scenarios" \
               --body "Automated daily check identified new potential Atomic Red Team tests for mapped scenarios. Please review and confirm telemetry generation capability." \
               --head update-art-scenarios \
-              --base main
+              --base main; then
+              echo "::warning::Branch 'update-art-scenarios' was successfully pushed to origin, but creating Pull Request via API failed. Please ensure 'Allow GitHub Actions to create and approve pull requests' is enabled in Repository Settings -> Actions -> General."
+            fi
           else
             echo "Pull Request already exists: PR #$pr_exists"
           fi

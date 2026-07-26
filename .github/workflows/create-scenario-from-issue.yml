@@ -87,18 +87,21 @@ jobs:
           echo "1. Entry for \`$REF\` in \`scenarios/catalog.csv\`" >> pr_body.txt
           echo "2. Bootstrapped scenario directory \`scenarios/${FOLDER}/\` with standard templates." >> pr_body.txt
 
-          PR_URL=$(gh pr create \
+          if PR_URL=$(gh pr create \
             --title "Propose Scenario $REF: $USE_CASE" \
             --body-file pr_body.txt \
             --base main \
-            --head "$BRANCH_NAME")
-            
-          echo "PR created: $PR_URL"
-          
-          # Add a comment to the issue
-          gh issue comment "$ISSUE_NUM" --body "🚀 Pull Request has been automatically generated: $PR_URL"
+            --head "$BRANCH_NAME" 2>&1); then
+            echo "PR created: $PR_URL"
+            # Add a comment to the issue
+            gh issue comment "$ISSUE_NUM" --body "🚀 Pull Request has been automatically generated: $PR_URL" || true
+          else
+            echo "::warning::Branch '$BRANCH_NAME' was pushed to origin, but creating PR via API failed: $PR_URL"
+            echo "::warning::Ensure 'Allow GitHub Actions to create and approve pull requests' is enabled under Repository Settings -> Actions -> General."
+            gh issue comment "$ISSUE_NUM" --body "⚠️ Branch \`$BRANCH_NAME\` was created and pushed, but automated PR creation failed. Please check repository workflow permissions." || true
+          fi
           
           # Update issue labels: remove 'create-scenario', add 'scenario-pr-created'
           gh label create scenario-pr-created --color 0e8a16 --description "Pull request created for this scenario" || true
           
-          gh issue edit "$ISSUE_NUM" --remove-label "create-scenario" --add-label "scenario-pr-created"
+          gh issue edit "$ISSUE_NUM" --remove-label "create-scenario" --add-label "scenario-pr-created" || true
