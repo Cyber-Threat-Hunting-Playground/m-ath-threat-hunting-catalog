@@ -16,6 +16,60 @@ This repository manages threat hunting scenarios that use machine learning and s
 
 ---
 
+## 🛠️ Repository Architecture
+
+| Component | Purpose | Details |
+|---|---|---|
+| **Development & Environment** | Dual-virtualenv architecture (`.jupyter_venv` & scenario venvs), kernel registration, and pre-commit security hooks. | See [docs/development.md](./docs/development.md) |
+| **GitHub Workflows & CI/CD** | 10 automated workflows for daily catalog sync, PEAK compliance, Atomic Red Team updates, and issue-driven scenario creation. | See [docs/workflows.md](./docs/workflows.md) |
+| **Agentic AI Skills** | Workspace-specific instructions guiding AI assistants to bootstrap, verify, and audit scenarios. | See [docs/custom_skills.md](./docs/custom_skills.md) |
+| **Contribution Workflow** | Guidelines and requirements for proposing new M-ATH scenarios or adding shared detection rules. | See [docs/CONTRIBUTING.md](./docs/CONTRIBUTING.md) |
+
+### 📖 Documentation Directory (`/docs/`)
+
+Detailed project guidelines and technical documentation are maintained in the [`docs/`](./docs) folder:
+
+* 📚 **[Setup & Development Guide (`docs/development.md`)](./docs/development.md)**: Explains the central JupyterLab server environment (`.jupyter_venv`), isolated scenario virtual environments, custom Jupyter kernel registration, and Git pre-commit hooks.
+* ⚙️ **[GitHub Workflows & Automation (`docs/workflows.md`)](./docs/workflows.md)**: Comprehensive breakdown of all 10 GitHub Actions workflows including daily Atomic Red Team scenario checks, catalog/folder validation, PEAK compliance auditing, VirusTotal enrichment, and issue-to-scenario generation.
+* 🤖 **[Custom Agentic Skills Guide (`docs/custom_skills.md`)](./docs/custom_skills.md)**: Usage guide for workspace-specific AI skills (`create-m-ath-scenario`, `verify-m-ath-scenario`, `peak-compliance-check`, `shared-logic-integrator`) used during pair programming.
+* 🤝 **[Contributing Guide (`docs/CONTRIBUTING.md`)](./docs/CONTRIBUTING.md)**: Complete workflow for contributors proposing new hunting scenarios, creating custom detection logics, or submitting pull requests.
+
+<details>
+<summary>📂 View Repository Directory Structure</summary>
+
+```
+├── .agents/                       # Custom agentic AI skills definitions
+│   └── skills/
+│       ├── create-m-ath-scenario/
+│       ├── peak-compliance-check/
+│       ├── shared-logic-integrator/
+│       └── verify-m-ath-scenario/
+├── .github/                       # GitHub Actions workflows & automation helper scripts
+│   ├── scripts/                   # Python scripts driving CI checks and issue handling
+│   └── workflows/                 # CI/CD workflow configurations (10 active workflows)
+├── data_grabber/
+│   └── sentinelone-powerquery/    # Telemetry extraction scripts
+├── data_transform/                # Telemetry cleaning and anonymisation utilities
+├── detection_logics/              # Shared scoring and enrichment rule modules
+├── docs/                          # Comprehensive documentation
+│   ├── CONTRIBUTING.md            # Scenario & logic contribution guide
+│   ├── custom_skills.md           # Agentic skills reference guide
+│   ├── development.md             # Environment setup & Jupyter kernel registration guide
+│   └── workflows.md               # GitHub Actions CI/CD workflows breakdown
+├── install/                       # Virtual environment & JupyterLab bootstrap scripts
+├── PEAK/                          # Splunk PEAK Framework reference material
+├── scenarios/
+│   ├── catalog.csv                # M-ATH use case catalog index
+│   ├── */README.md                # Individual scenario documentation
+│   ├── */input/                   # Source telemetry / datasets
+│   ├── */output/                  # Ranked findings & analysis output
+│   └── */*.ipynb                  # Scenario Jupyter notebooks
+└── scripts/                       # Utility scripts and JupyterLab starters
+```
+</details>
+
+---
+
 ## 🎯 Overview & PEAK Alignment
 
 M-ATH is one of three hunt types in the PEAK Framework (*Prepare, Execute, and Act with Knowledge*). It uses algorithms to find leads for threat hunting, enabling more advanced and experimental hunts when:
@@ -148,7 +202,6 @@ This project leverages custom agentic skills in the [skills directory](./.agents
 
 ---
 
-
 ## ⚡ Quick Start
 
 For full instructions, virtual environment settings, and Jupyter kernel configurations, see the [Local Setup & Development Guide](./docs/development.md).
@@ -179,73 +232,6 @@ Create the isolated environment for a scenario (e.g., `process_clustering`), reg
   ./install/bootstrap_scenario_venv.sh scenarios/process_clustering
   python scripts/start_jupyterlab.py
   ```
-
----
-
-## 🛠️ Repository Architecture
-
-| Component | Purpose | Details |
-|---|---|---|
-| **Local Environments** | Keep scenarios isolated using virtual environments registered as custom Jupyter kernels. | See [docs/development.md](./docs/development.md) |
-| **GitHub Actions** | Daily validations checking folder structures, python compliance, and catalog synchronization. | See [docs/workflows.md](./docs/workflows.md) |
-| **Development Security** | Git pre-commit hooks to verify telemetry is sanitized and no private keys are committed. | See [docs/development.md](./docs/development.md#git-pre-commit-hooks-development-security) |
-| **Agentic Custom Skills** | Workspace-specific instructions guiding AI assistants to bootstrap, verify, and audit scenarios. | See [docs/custom_skills.md](./docs/custom_skills.md) |
-
-
-<details>
-<summary>📂 View Repository Directory Structure</summary>
-
-```
-├── .github/                       # GitHub Actions & validation helper scripts
-│   ├── scripts/
-│   │   ├── create_data_transform_issues.py
-│   │   ├── create_missing_catalog_issues.py
-│   │   ├── create_missing_scenarios_folder_issues.py
-│   │   ├── find_missing_in_catalog.py
-│   │   └── find_missing_scenarios_folders.py
-│   └── workflows/
-│       ├── check-catalog-sync.yml
-│       ├── check-data-transform.yml
-│       ├── check-scenarios-folders.yml
-│       ├── download-confusables.yml
-│       └── virustotal-high-confidence.yml
-├── data_grabber/
-│   └── sentinelone-powerquery/
-│       ├── sentinelone_query.py   # SentinelOne PowerQuery collector
-│       └── config.json            # Local query configuration
-├── data_transform/                # Telemetry cleaning and deduplication utilities
-│   ├── data_anonymisation.py
-│   ├── data_anonymisation.input.example
-│   └── data_deduplication.py
-├── detection_logics/              # Shared scoring and enrichment helpers (reusable rule hits)
-├── install/
-│   ├── bootstrap_jupyter_venv.ps1 # Central JupyterLab environment bootstrap (Windows)
-│   ├── bootstrap_jupyter_venv.py  # Central JupyterLab environment bootstrap (Python)
-│   ├── bootstrap_scenario_venv.ps1 # Scenario-specific venv bootstrap & kernel registration (Windows)
-│   ├── bootstrap_scenario_venv.sh # Scenario-specific venv bootstrap & kernel registration (Bash)
-│   ├── install_dependencies.ps1   # Local dependency bootstrap
-│   ├── install_dependencies.sh    # Linux/macOS dependency bootstrap
-│   └── requirements.txt           # Shared Python dependencies
-├── PEAK/                          # Reference material for the PEAK framework
-├── scenarios/
-│   ├── catalog.csv                # M-ATH use case catalog
-│   ├── */README.md                # Scenario documentation
-│   ├── */input/                   # Source telemetry or exported datasets
-│   ├── */output/                  # Analysis outputs and ranked findings
-│   └── */*.ipynb                  # Scenario notebooks where implemented
-├── scripts/
-│   ├── add_virustotal_verdicts.py
-│   ├── bootstrap_scenarios.py
-│   ├── fetch_sentinelone.py
-│   ├── json_to_csv.py
-│   ├── propose_scenario.py        # CLI helper to propose/bootstrap scenarios
-│   ├── run_analysis.py
-│   └── update_catalog_folders.py
-└── scripts/                       # Utility and runner scripts
-    ├── start_jupyterlab.ps1       # Runner to start central JupyterLab (Windows)
-    └── start_jupyterlab.py        # Runner to start central JupyterLab (Python)
-```
-</details>
 
 ---
 
