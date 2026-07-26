@@ -8,10 +8,10 @@ jupyter>=1.1.1
 matplotlib>=3.11.1
 nbconvert>=7.17.1
 papermill>=2.7.0
-pandas>=3.0.3
+pandas>=3.0.5
 requests>=2.34.2  # required for VirusTotal API integrations
 seaborn>=0.13.2
 tabulate
 wordcloud>=1.9.6
-pytest>=8.0.0
-openai>=2.45.0
+pytest>=9.1.1
+openai>=2.48.0
